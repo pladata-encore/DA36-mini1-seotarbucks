@@ -20,7 +20,35 @@ class StarBucks_Menu:
 
                 # 커피
                 case '1':
-                    pass
+                    coffee_menu = """
+--------커피 메뉴--------
+1. 아메리카노
+2. 카페라떼
+3. 돌체라떼
+4. 카페모카
+5. 카라멜 마끼아또
+0. 돌아가기
+-------------------------
+선택:                """
+                    while True:
+                        choice = input(coffee_menu)
+
+                        match choice:
+                            case '1':
+                                self.option()
+                            case '2':
+                                pass
+                            case '3':
+                                pass
+                            case '4':
+                                pass
+                            case '5':
+                                pass
+                            case '0':
+                                return
+                            case _:
+                                pass
+
 
                 # 논커피
                 case '2':
@@ -80,3 +108,6 @@ class StarBucks_Menu:
                     return
                 case _:
                     print('>> 잘못 선택 하셨습니다.')
+
+    def option(self):
+        

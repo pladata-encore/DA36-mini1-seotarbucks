@@ -12,6 +12,52 @@ class test:
     def cal_total(self):
         return self.price * self.quantity
 
+class Main_menu:
+
+    def __init__(self, name, price, quantity):
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+
+
+    def display_menu(self):
+        menu = '''
+1. 커피
+2. 음료
+3. 블랜디드
+        '''
+        choice = input(menu)
+        match choice:
+            case '1':
+                pass
+            case '2':
+                pass
+            case '3':
+                pass
+
+
+    def input_order
+
+
+        print('1. 아메리카노 \n2. 라떼')
+        self.name = input('메뉴 선택 :')
+
+
+
+
+
+class Shopping_bag:
+    orders = []
+    def __init__(self):
+        pass
+
+    def add_shopping_bag(self, order):
+        Shopping_bag.orders.append(order)
+        return 1
+
+
+
+
 
 
 class discnt_page:
@@ -26,26 +72,37 @@ class discnt_page:
     def __init__(self):
         pass
 
+    def total_price_cal(self):
+        total_price = 0
+        for item in Shopping_bag.orders:
+            total_price += item.price * item.quantity
+        return total_price
 
-''' 통신사 확인
-1. skt
-2. kt
-3. lgu
-'''
+
+    ''' 통신사 확인
+    1. skt
+    2. kt
+    3. lgu
+    '''
 
     def calculation(self, carrier, total_price):
+
         match carrier:
             case '1':
-                discount_price = total_price * discnt.skt
+                discount_price = total_price * discnt_page.skt
             case '2':
-                discount_price = total_price * discnt.kt
+                discount_price = total_price * discnt_page.kt
             case '3':
-                discount_price = total_price * discnt.lgu
+                discount_price = total_price * discnt_page.lgu
             case _:
                 print('잘못된 통신사입니다.')
+                return 0
+
+        return discount_price
 
     def payment(self):
         method = input('결제 수단을 선택하세요')
+        flag = 1
 
         match method:
             case '1':   # 신용카드
@@ -56,15 +113,21 @@ class discnt_page:
                 print('핸드폰을 테그에 접촉해주세요')
             case _:
                 print('잘못된 선택입니다.')
+                flag = 0
+
+        if flag != 0:
+            print('성장적으로 결제 되었습니다.')
+        return flag
 
 
     def membership(self):
-            member = input('멤버쉽 있으신가요??')
+            member = input('멤버쉽 있으신가요?? 1. yes, 2. no')
+            flag = 1
 
             match member:
                 case '1' :
                     cell_number = input('핸드폰 번호를 입력해주세요')        # try except 가능
-                    add_point(cell_number)
+                    discnt_page.add_point(cell_number)
                 case '2':
                     mem_join = input('멤버쉽에 가입하시겠습니까? [y]/n')
                     if mem_join != 'n':
@@ -74,6 +137,9 @@ class discnt_page:
                         print('결제화면으로 이동합니다.')
                 case _:
                     print('잘못누르셨습니다.')
+                    flag = 0
+
+            return flag
 
     def add_point(self, cell_number):
         discnt_page.members[cell_number] += 1 # members : 멤버쉽 딕셔너리들, 값들은 숫자여야 함.
@@ -93,20 +159,10 @@ class discnt_page:
 
 
 
-
-
-
-
-
-
-
-
-
-
 tt = test('a',3000,3 )
 result = tt.cal_total()
-results.append(result)
-print(results)
+
+print(result)
 
 
 

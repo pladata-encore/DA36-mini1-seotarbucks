@@ -1,6 +1,6 @@
-# from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod
 # 부모 클래스(공통된 옵션(속성)/메소드) 선언
-class StarBucks:
+class StarBucks(ABC):
     """
     - 커피 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, 디카페인, [상품명, 샷(연하게, 보통, 진하게(샷추가+500) ), 가격 ]
     - 음료 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, [상품명, 휘핑 유무, 가격]
@@ -34,72 +34,73 @@ class StarBucks:
     -> 변경없다. 매출액 시트에 할인금액? 넣을까....?????
     """
     next_id = 1
-
-    def __init__(self,menu_name, temp=None, size=None, amnt_ice=None, sugar_cnt=None, cup=None, quantity=None, price = None):
+    price = 5000  # TODO 가격표를 만들어서 엑셀파일 시트로 만들고 싶다....!!
+                  # TODO 가격표 시트에 있는 가격을 불러와서 알아서 계산되게 하고싶다...!!
+    def __init__(self,name, temp, size, amnt_ice, sugar_cnt, cup, quantity):
         self.__id = StarBucks.next_id
-        self.__menu_name = menu_name
+        self.__name = name
         self.__temp = temp
         self.__size = size
         self.__amnt_ice = amnt_ice
         self.__sugar_cnt = sugar_cnt
         self.__cup = cup
         self.__quantity = quantity
-        self.__price = price
-
-
+        self.__price = StarBucks.price
+        self.__sv = StarBucks.price * int(quantity)
         StarBucks.next_id += 1
-
     def get_id(self):
         return self.__id
-
     def get_price(self):
         return self.__price
-    def set_price(self, price):
-        self.__price = price
-
+    def get_sv(self):
+        return self.__sv
     def get_name(self):
-        return self.__menu_name
-    def set_name(self, menu_name):
-        self.__menu_name = menu_name
-
+        return self.__name
+    def set_name(self, name):
+        self.__name = name
     def get_temp(self):
         return self.__temp
     def set_temp(self, temp):
        self.__temp = temp
-
     def get_size(self):
         return self.__size
     def set_size(self, size):
        self.__size = size
-
     def get_amnt_ice(self):
         return self.__amnt_ice
     def set_amnt_ice(self, amnt_ice):
        self.__amnt_ice = amnt_ice
-
     def get_sugar_cnt(self):
         return self.__sugar_cnt
     def set_sugar_cnt(self, sugar_cnt):
        self.__sugar_cnt = sugar_cnt
-
     def get_cup(self):
         return self.__cup
     def set_cup(self, cup):
        self.__cup = cup
-
     def get_quantity(self):
         return self.__quantity
     def set_quantity(self, quantity):
        self.__quantity = quantity
-
+    # @abstractmethod
+    # def calculate_margin(self):
+    #     pass
     def __repr__(self):
         return f"""
-{self.__id}번, 상품명:{self.__menu_name}, 사이즈:{self.__size}, 얼음량:{self.__amnt_ice}, 당도:{self.__sugar_cnt}, 컵:{self.__cup}, 수량:{self.__quantity}개, 가격:{self.__price}
+{self.__id}번
+상품명: {self.__name}
+HOT/ICED: {self.__temp}
+사이즈: {self.__size}
+얼음량: {self.__amnt_ice}
+당도: {self.__sugar_cnt}
+컵: {self.__cup}
+수량: {self.__quantity}개
+가격: {self.__sv}원
 """
 # 자식(상품)클래스 선언 - 카테고리
 class Coffee(StarBucks):
-    def __init__(self, menu_name, temp, size, amnt_ice, sugar_cnt, cup, decaffein, shot, quantity):
-        super().__init__(menu_name, temp, size, amnt_ice, sugar_cnt, cup, quantity)
+    def __init__(self, name, temp, size, amnt_ice, sugar_cnt, cup, decaffein, shot, quantity):
+        super().__init__(name, temp, size, amnt_ice, sugar_cnt, cup, quantity)
         self.__decaffein = decaffein
         self.__shot = shot
     def get_decaffein(self):
@@ -140,4 +141,3 @@ class NonCoffee(StarBucks):
 {super().__repr__()}\n휘핑: {self.__whipping}
 {'-'*30}
 """
-

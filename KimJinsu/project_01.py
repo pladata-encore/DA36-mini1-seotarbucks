@@ -85,7 +85,7 @@ class discnt_page:
     3. lgu
     '''
 
-    def calculation(self, carrier, total_price):
+    def calculation(self, carrier, total_price): # 통신사 없을 시 추가 해야함
 
         match carrier:
             case '1':
@@ -100,8 +100,8 @@ class discnt_page:
 
         return discount_price
 
-    def payment(self):
-        method = input('결제 수단을 선택하세요')
+    def payment(self):      # 1) 결제가능 제한시간, 2) 일정시간(3초) 후 결제완료 메세지 표출
+        method = input('결제 수단을 선택하세요 1)신용카드 ,2)현금결제, 3)각종 pay')
         flag = 1
 
         match method:

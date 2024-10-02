@@ -36,6 +36,12 @@ class StarBucks(ABC):
     next_id = 1
     price = 5000  # TODO 가격표를 만들어서 엑셀파일 시트로 만들고 싶다....!!
                   # TODO 가격표 시트에 있는 가격을 불러와서 알아서 계산되게 하고싶다...!!
+
+
+
+
+
+
     def __init__(self,name, temp, size, amnt_ice, sugar_cnt, cup, quantity):
         self.__id = StarBucks.next_id
         self.__name = name

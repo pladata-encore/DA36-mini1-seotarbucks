@@ -12,13 +12,16 @@ class StarBucks_Menu:
 선택:        """
         while True:
             choice = input(menu_str)
+
             match choice:
                 # 커피
                 case '1':
-                    pass
+                    self.stbk_service.coffee_menu()
+
                 # 논커피
                 case '2':
                     pass
+
                 # 관리자 모드 실행
                 case '-1':
                     password = input('>> 관리자 모드를 실행합니다.\n비밀번호를 입력하세요.\n비밀번호 :')
@@ -27,10 +30,13 @@ class StarBucks_Menu:
                         self.manager_mode()
                     else:
                         print('>> 비밀번호를 틀렸습니다.')
+
                 case '0':
                     return
+
                 case _:
                     print('>> 잘못 선택하셨습니다.')
+
     def print_stbks(self, stbks):
         if len(stbks) > 0:
             print(f'{'-'*10}0000년 00월 00일 매출전표{'-'*10}')
@@ -39,6 +45,18 @@ class StarBucks_Menu:
                 # print(f'{stbk.get_id()}\t{stbk.get_name()}\t{stbk.get_price()}')
         else:
             print('😥😥조회된 결과가 없습니다.😥😥')
+
+
+
+
+
+
+
+
+
+
+
+
     def manager_mode(self):
         manager_mode = """
 -----------매니저 관리 모드------------
@@ -63,3 +81,5 @@ class StarBucks_Menu:
                     return
                 case _:
                     print('>> 잘못 선택 하셨습니다.')
+
+

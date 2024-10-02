@@ -1,4 +1,5 @@
 from stbk_service import StarBucks_Service
+
 class StarBucks_Menu:
     def __init__(self):
         self.stbk_service = StarBucks_Service()
@@ -7,6 +8,7 @@ class StarBucks_Menu:
 ----------메뉴---------
 1. Coffee (커피)
 2. Non-Coffee (음료)
+3. Blended (블렌디드)
 0. 주문 종료
 ----------------------
 선택:        """
@@ -20,6 +22,10 @@ class StarBucks_Menu:
 
                 # 논커피
                 case '2':
+                    pass
+
+                # 블렌디드
+                case '3':
                     pass
 
                 # 관리자 모드 실행

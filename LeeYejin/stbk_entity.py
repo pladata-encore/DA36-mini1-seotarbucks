@@ -42,9 +42,9 @@ class StarBucks(ABC):
 
 
 
-    def __init__(self,name, temp, size, amnt_ice, sugar_cnt, cup, quantity):
+    def __init__(self,menu_name, temp=None, size=None, amnt_ice=None, sugar_cnt=None, cup=None, quantity=None):
         self.__id = StarBucks.next_id
-        self.__name = name
+        self.__menu_name = menu_name
         self.__temp = temp
         self.__size = size
         self.__amnt_ice = amnt_ice
@@ -52,18 +52,18 @@ class StarBucks(ABC):
         self.__cup = cup
         self.__quantity = quantity
         self.__price = StarBucks.price
-        self.__sv = StarBucks.price * int(quantity)
+        # self.__sv = StarBucks.price * int(quantity)
         StarBucks.next_id += 1
     def get_id(self):
         return self.__id
     def get_price(self):
         return self.__price
-    def get_sv(self):
-        return self.__sv
+    # def get_sv(self):
+    #     return self.__sv
     def get_name(self):
-        return self.__name
-    def set_name(self, name):
-        self.__name = name
+        return self.__menu_name
+    def set_name(self, menu_name):
+        self.__menu_name = menu_name
     def get_temp(self):
         return self.__temp
     def set_temp(self, temp):
@@ -94,19 +94,18 @@ class StarBucks(ABC):
     def __repr__(self):
         return f"""
 {self.__id}번
-상품명: {self.__name}
+상품명: {self.__menu_name}
 HOT/ICED: {self.__temp}
 사이즈: {self.__size}
 얼음량: {self.__amnt_ice}
 당도: {self.__sugar_cnt}
 컵: {self.__cup}
 수량: {self.__quantity}개
-가격: {self.__sv}원
 """
 # 자식(상품)클래스 선언 - 카테고리
 class Coffee(StarBucks):
-    def __init__(self, name, temp, size, amnt_ice, sugar_cnt, cup, decaffein, shot, quantity):
-        super().__init__(name, temp, size, amnt_ice, sugar_cnt, cup, quantity)
+    def __init__(self, menu_name, temp, size, amnt_ice, sugar_cnt, cup, decaffein, shot, quantity):
+        super().__init__(menu_name, temp, size, amnt_ice, sugar_cnt, cup, quantity)
         self.__decaffein = decaffein
         self.__shot = shot
     def get_decaffein(self):
@@ -147,3 +146,4 @@ class NonCoffee(StarBucks):
 {super().__repr__()}\n휘핑: {self.__whipping}
 {'-'*30}
 """
+

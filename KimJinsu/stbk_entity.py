@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 # 부모 클래스(공통된 옵션(속성)/메소드) 선언
-class StarBucks(ABC):
+class StarBucks:
     """
     - 커피 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, 디카페인, [상품명, 샷(연하게, 보통, 진하게(샷추가+500) ), 가격 ]
     - 음료 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, [상품명, 휘핑 유무, 가격]
@@ -34,7 +34,7 @@ class StarBucks(ABC):
     -> 변경없다. 매출액 시트에 할인금액? 넣을까....?????
     """
     next_id = 1
-    price = 5000  # TODO 가격표를 만들어서 엑셀파일 시트로 만들고 싶다....!!
+    # price = 5000  # TODO 가격표를 만들어서 엑셀파일 시트로 만들고 싶다....!!
                   # TODO 가격표 시트에 있는 가격을 불러와서 알아서 계산되게 하고싶다...!!
 
 
@@ -42,7 +42,7 @@ class StarBucks(ABC):
 
 
 
-    def __init__(self,name, temp=None, size=None, amnt_ice=None, sugar_cnt=None, cup=None, quantity=None):
+    def __init__(self,name,temp=None,size=None,amnt_ice=None,sugar_cnt=None,cup=None,quantity=None,price=None):
         self.__id = StarBucks.next_id
         self.__name = name
         self.__temp = temp
@@ -51,13 +51,15 @@ class StarBucks(ABC):
         self.__sugar_cnt = sugar_cnt
         self.__cup = cup
         self.__quantity = quantity
-        self.__price = StarBucks.price
+        self.__price = price
         # self.__sv = StarBucks.price * int(quantity)
         StarBucks.next_id += 1
     def get_id(self):
         return self.__id
     def get_price(self):
         return self.__price
+    def set_price(self,price):
+        self.__price = price
     def get_sv(self):
         return self.__sv
     def get_name(self):
@@ -93,15 +95,7 @@ class StarBucks(ABC):
     #     pass
     def __repr__(self):
         return f"""
-{self.__id}번
-상품명: {self.__name}
-HOT/ICED: {self.__temp}
-사이즈: {self.__size}
-얼음량: {self.__amnt_ice}
-당도: {self.__sugar_cnt}
-컵: {self.__cup}
-수량: {self.__quantity}개
-
+{self.__id}번, 상품명:{self.__name}, 사이즈:{self.__size}, 얼음량:{self.__amnt_ice}, 당도:{self.__sugar_cnt}, 컵:{self.__cup}, 수량:{self.__quantity}개, 가격:{self.__price}
 """
 # 자식(상품)클래스 선언 - 카테고리
 class Coffee(StarBucks):

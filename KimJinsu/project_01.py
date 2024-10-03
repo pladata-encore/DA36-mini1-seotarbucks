@@ -1,5 +1,9 @@
 # 미니 프로젝트1
 # data convention : [카테고리, 상품명, 온도, 사이즈, 수량, togo, [옵션]]
+from stbk_entity import StarBucks
+
+from rich.progress import track
+import time, os
 
 
 class test:
@@ -36,7 +40,7 @@ class Main_menu:
                 pass
 
 
-    def input_order
+    def input_order(self):
 
 
         print('1. 아메리카노 \n2. 라떼')
@@ -51,31 +55,33 @@ class Shopping_bag:
     def __init__(self):
         pass
 
-    def add_shopping_bag(self, order):
+    def add_shopping_bag( order):
         Shopping_bag.orders.append(order)
-        return 1
+        return Shopping_bag.orders
 
 
 
 
 
 
-class discnt_page:
+class Final_page:
+    from stbk_entity import StarBucks
 
     skt = 0.1
     kt = 0.1
     lgu = 0.05
-    members = {}
-    order_nums = 1
+    members = {'2074':2}
+    order_nums = 0
 
 
     def __init__(self):
         pass
 
-    def total_price_cal(self):
+    def total_price_cal(self,bags):
         total_price = 0
-        for item in Shopping_bag.orders:
-            total_price += item.price * item.quantity
+        for item in bags:
+            total_price += item.get_price * item.get_quantity
+        print(total_price)
         return total_price
 
 
@@ -85,15 +91,29 @@ class discnt_page:
     3. lgu
     '''
 
+    def carrier_sel(self):
+        print('사용하고 계신 통신사를 선택해 주세요.')
+        str_carrier_menu = '''
+1. SKT (10% 할인)
+2. KT   (10% 할인)
+3. LGU (5% 할인)
+4. 해당없음.
+'''
+        input_carrier = input(str_carrier_menu)
+        return input_carrier
+
     def calculation(self, carrier, total_price): # 통신사 없을 시 추가 해야함
 
         match carrier:
             case '1':
-                discount_price = total_price * discnt_page.skt
+                discount_price = total_price * (1-Final_page.skt)
             case '2':
-                discount_price = total_price * discnt_page.kt
+                discount_price = total_price * (1-Final_page.kt)
             case '3':
-                discount_price = total_price * discnt_page.lgu
+                discount_price = total_price * (1-Final_page.lgu)
+            case '4':
+                print('해당되는 할인 항목이 없습니다.')
+                discount_price = total_price
             case _:
                 print('잘못된 통신사입니다.')
                 return 0
@@ -101,68 +121,98 @@ class discnt_page:
         return discount_price
 
     def payment(self):      # 1) 결제가능 제한시간, 2) 일정시간(3초) 후 결제완료 메세지 표출
-        method = input('결제 수단을 선택하세요 1)신용카드 ,2)현금결제, 3)각종 pay')
+        method = input('결제 수단을 선택하세요\n1)신용카드 ,2)현금결제, 3)각종 pay\n')
         flag = 1
 
         match method:
             case '1':   # 신용카드
                 print('카드를 칩 리더기에 넣어주세요')
+                for i in track(range(3)):
+                    time.sleep(0.5)
+
             case '2':   # 현금결제
                 print('카운터에서 결제 해주세요')
             case '3':   # 삼성, 애플 pay
                 print('핸드폰을 테그에 접촉해주세요')
+                for i in track(range(3)):
+                    time.sleep(0.5)
             case _:
                 print('잘못된 선택입니다.')
                 flag = 0
 
-        if flag != 0:
+        if flag != '0':
+            print('Requesting transaction....')
+            time.sleep(0.5)
+            print('Waiting for response....')
+            time.sleep(0.2)
+            print('Data transmit successful....')
+            time.sleep(0.5)
+            print('Receiving encrypted transaction data....')
+            time.sleep(0.1)
+            print('Transaction was successful....')
+            time.sleep(0.2)
+
             print('성장적으로 결제 되었습니다.')
         return flag
 
 
     def membership(self):
-            member = input('멤버쉽 있으신가요?? 1. yes, 2. no')
+            member = input('멤버쉽 있으신가요?? 1. yes, 2. no\n>>')
             flag = 1
 
             match member:
                 case '1' :
-                    cell_number = input('핸드폰 번호를 입력해주세요')        # try except 가능
-                    discnt_page.add_point(cell_number)
+                    # cell_number = input('핸드폰 번호를 입력해주세요')        # try except 가능
+                    Final_page.add_point(999)
                 case '2':
-                    mem_join = input('멤버쉽에 가입하시겠습니까? [y]/n')
-                    if mem_join != 'n':
-
-                        mem_number = input('핸드폰 번호를 입력해주세요')
+                    mem_join = input('멤버쉽에 가입하시겠습니까? [1=y]/2=n \n>>')
+                    if mem_join != '2':
+                        Final_page.join_member(999)
                     else :
                         print('결제화면으로 이동합니다.')
                 case _:
-                    print('잘못누르셨습니다.')
+                    print('잘못 누르셨습니다.')
                     flag = 0
 
             return flag
 
-    def add_point(self, cell_number):
-        discnt_page.members[cell_number] += 1 # members : 멤버쉽 딕셔너리들, 값들은 숫자여야 함.
-        print('적립이 완료 되었습니다.')
+    def add_point(self):
+        cell_number = input('핸드폰 번호를 입력해주세요\n>>')
+        try :
+            Final_page.members[cell_number] += 1 # members : 멤버쉽 딕셔너리들, 값들은 숫자여야 함.
+            print(f'1포인트 적립이 완료 되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
+        except:
+            print('등록되지 않은 회원입니다. 회원가입을 진행합니다.')
+            Final_page.join_member(999)
+            # Final_page.members[cell_number] = 1
+            # print(f'1포인트 적립이 완료되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
 
-    def join_member(self,cell_number):
-        discnt_page.members[cell_number] = 1    # 딕셔너리에 멤버 추가
-        print('회원가입이 완료되었습니다.')
+
+    def join_member(self):
+        cell_number = input('핸드폰 번호를 입력해주세요\n>>')
+        if cell_number in Final_page.members:
+            Final_page.members[cell_number] += 1  # members : 멤버쉽 딕셔너리들, 값들은 숫자여야 함.
+            print('가입된 회원 정보가 있습니다.')
+            print(f'1포인트 적립이 완료 되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
+        else:
+            Final_page.members[cell_number] = 1    # 딕셔너리에 멤버 추가
+            print(f'회원가입이 완료되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
 
     def receipt(self):
         print('주문이 완료 되었습니다. 감사합니다.')
-        discnt_page.order_nums += 1
+        Final_page.order_nums += 1
+        print(f'주문번호는 {Final_page.order_nums}번 입니다. ')
 
 
 
 
 
 
+#
+# tt = test('a',3000,3 )
+# result = tt.cal_total()
 
-tt = test('a',3000,3 )
-result = tt.cal_total()
-
-print(result)
+# print(result)
 
 
 

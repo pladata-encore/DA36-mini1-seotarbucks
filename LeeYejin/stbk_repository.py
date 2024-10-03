@@ -1,12 +1,15 @@
+
 from stbk_entity import StarBucks
 from stbk_entity import Coffee
 from stbk_entity import NonCoffee
 import pickle
 import openpyxl as op
+
 """
 - 커피 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, 디카페인, [상품명, 샷(연하게, 보통, 진하게(샷추가+500) ), 가격 ]
 - 음료 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, [상품명, 휘핑 유무, 가격]
 """
+
 class StarBucks_Repository:
     def __init__(self):
         print('StarBucks_Repository 인스턴스가 생성되었습니다.')
@@ -69,34 +72,106 @@ class StarBucks_Repository:
         while True:
             menu_name = int(input(coffee_menu_str))
 
-            if menu_name == 0:
-                return
-            elif menu_name in range(1,len(coffee_menu_list)+1):
-                choice = self.option_temp()
-                match choice:
-                    case 'HOT':
-                        self.custom_coffee_hot()
-                    case 'ICED':
-                        self.custom_coffee_iced()
-            else:
-                print('> 잘못 선택 하셨습니다.')
-
-    def option_temp(self):
-        temp_list = {
-            1: ('HOT'),
-            2: ('ICED')
-        }
-        temp_str = """
---HOT/ICED 선택--
+            if menu_name in coffee_menu_list:
+                print(f'{coffee_menu_list[menu_name][0]}를 선택하셨습니다.')
+                temp_list = ['HOT', 'ICED']
+                temp = int(input("""
+----HOT / ICED----
 1. HOT
-2. ICED
-----------------
-선택:    """
-        temp = int(input(temp_str))
-        return temp_list[temp]
+2. ICED    
+선택:    """))
+                qntt = int(input('수량을 입력해주세요'))
+                swt_list = ['120%', '100%', '80%']
+                swt = int(input('''
+----당도----
+1. 더 달게(120%) 
+2. 보통(100%)
+3. 덜 달게(80%)
+선택: '''))
+                # order.set_sugar_cnt(swt)
+                size_list = ['Tall', 'Grande', 'Venti']
+                size = int(input('''
+----사이즈----
+1. Tall
+2. Grande
+3. Venti
+선택: '''))
+                print(
+                    f'{coffee_menu_list[menu_name][0]} {temp_list[temp - 1]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}를 선택하셨습니다 ')
 
-    def custom_coffee_hot(self):
-        return 'HOT 커스텀 옵션을 실행합니다.'
+                order = StarBucks(coffee_menu_list[menu_name][0])
+                # order.set_name(coffee_menu_list[menu_name][0])
+                order.set_temp(temp)
+                order.set_quantity(qntt)
+                order.set_size(size_list[size - 1])
+                order.set_sugar_cnt(swt)
+                print(order)
+            elif menu_name == 0:
+                return
 
-    def custom_coffee_iced(self):
-        return 'ICED 커스텀 옵션을 실행합니다.'
+            else:
+                print('잘못 선택하셨습니다. 다시 선택해주세요')
+
+            return self.coffee_menu()
+
+    # def blended_menu(self):
+    #     blended_menu_list = {
+    #         1: ('녹차 프라투치노', 6500),
+    #         2: ('자바칩 프라푸치노', 7000),
+    #         3: ('피치 아사이 리프레셔', 6000),
+    #         4: ('딸기 아사이 리프레셔', 6000),
+    #         5: ('망고 리프레셔', 6000)
+    #     }
+    #     blended_menu_str = """
+    # ---------Coffee Menu--------
+    # 1. 녹차 프라푸치노         =======     6500원
+    # 2. 자바칩 프라푸치노        =========   7000원
+    # 3. 피치 아사이 리프레셔     =========    6000 원
+    # 4. 딸기 아사이 리프레셔     ======       6000 원
+    # 5. 망고 리프레셔           ====         6000 원
+    # 0. 이전으로 돌아가기
+    # ----------------------------
+    # 선택:                    """
+    #
+    #
+    #     while True:
+    #         menu_name = int(input(blended_menu_str))
+    #
+    #         if menu_name in blended_menu_list:
+    #             print(f'{blended_menu_list[menu_name][0]}를 선택하셨습니다.')
+    #             # order = StarBucks
+    #             #
+    #             # order.set_name(name=coffee_menu_list[menu_name][0])
+    #
+    #             qntt = int(input('수량을 입력해주세요'))
+    #             # order.set_quantity(qntt)
+    #
+    #             swt_list=['120%','100%','80%']
+    #
+    #             swt = int(input('''
+    #             당도를 입력해주세요
+    #             1=120%
+    #             2=100%
+    #             3=80%
+    #             >'''))
+    #             # order.set_sugar_cnt(swt)
+    #             size_list=['Tall', 'Grande', 'Venti']
+    #             size = int(input('''
+    #             사이즈를 입력해주세요
+    #             1 = Tall
+    #             2 = Grande
+    #             3 = Venti
+    #             >>'''))
+    #         else:
+    #             print('잘못 선택하셨습니다. 다시 선택해주세요')
+    #
+    #         print(f'{blended_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt-1]}, 사이즈는 {size_list[size-1]}를 선택하셨습니다 ')
+    #
+    #         order = StarBucks(blended_menu_list[menu_name][0])
+    #         # order.set_name(coffee_menu_list[menu_name][0])
+    #         order.set_quantity(qntt)
+    #         order.set_size(size_list[size-1])
+    #
+    #         print(order)
+    #
+    # blended_menu()

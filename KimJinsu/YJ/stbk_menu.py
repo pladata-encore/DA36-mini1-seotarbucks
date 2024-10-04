@@ -1,7 +1,9 @@
 from stbk_service import StarBucks_Service
+from rich.console import Console
 from rich.table import Column, Table
+import os
 
-table = Table(show_header=True, header_style="bold magenta")
+
 
 
 class StarBucks_Menu:
@@ -12,18 +14,34 @@ class StarBucks_Menu:
 
         shopping_bag=[]
 
-        menu_str = """
-    ----------메뉴---------
-    1. Coffee (커피)
-    2. Non-Coffee (음료)
-    3. Blended (블렌디드)
-    0. 주문 종료
-    ----------------------
-    선택: """
+    #     menu_str = """
+    # ----------메뉴---------
+    # 1. Coffee (커피)
+    # 2. Non-Coffee (음료)
+    # 3. Blended (블렌디드)
+    # 0. 주문 종료
+    # ----------------------
+    # 선택: """
+
+
+
+
 
 
         while True:
-            choice = input(menu_str)
+            os.system('cls')
+            table = Table(title="========== 카테고리 선택 ===========", show_header=True, header_style="bold magenta")
+            table.add_column('Selction', width=10, justify='center')
+            table.add_column('Menu', width=40, justify='center')
+
+            table.add_row('1', 'Coffee')
+            table.add_row('2', 'Non-Coffee')
+            table.add_row('3', 'Blended')
+            table.add_row('0', '주문 종료')
+
+            console = Console()
+            console.print(table)
+            choice = input('카테고리를 선택해주세요>>')
 
             match choice:
                 # 커피
@@ -56,7 +74,7 @@ class StarBucks_Menu:
                 case _:
                     print('>> 잘못 선택하셨습니다.')
 
-            re_flag = input('\t더 주문하시겠어요? [y=1/n=0]')
+            re_flag = input('\n더 주문하시겠어요? [y=1/n=0]')
             if re_flag == '0':
                 # print(shopping_bag)
                 break

@@ -1,7 +1,14 @@
 from abc import ABC, abstractmethod
+
+
 # 부모 클래스(공통된 옵션(속성)/메소드) 선언
 from rich.progress import track
 import time, os
+from rich.console import Console
+from rich.table import Column, Table
+
+
+
 
 class StarBucks(ABC):
     """
@@ -102,49 +109,107 @@ class StarBucks(ABC):
     # @abstractmethod
     # def calculate_margin(self):
     #     pass
-    def __repr__(self):
-        return f"""
-{self.__id}번
-상품명: {self.__menu_name}
-HOT/ICED: {self.__temp}
-사이즈: {self.__size}
-얼음량: {self.__amnt_ice}
-당도: {self.__sugar_cnt}
-컵: {self.__cup}
-수량: {self.__quantity}개
-"""
+#     def __repr__(self):
+#         return f"""
+# {self.__id}번
+# 상품명: {self.__menu_name}
+# HOT/ICED: {self.__temp}
+# 사이즈: {self.__size}
+# 얼음량: {self.__amnt_ice}
+# 당도: {self.__sugar_cnt}
+# 컵: {self.__cup}
+# 수량: {self.__quantity}개
+# """
 
 
 
 class FinalPage:
-
-
     def __init__(self):
         pass
-
-    # def shopping_bag_display(self):
-
-
-
 
     def cart_price_sum(self,bags):
         sum_price = 0
         for order_price in bags:
             sum_price += order_price.get_price()
-            # print(sum_price)
 
-        # print(sum_price)
         return sum_price
 
+    def shopping_list(self, shopping_bag, price):
+        size_list = ['Tall', 'Grande', 'Venti']
+        temp_list = ['HOT', 'ICED']
+        ice_list = ['Extra', 'Normal', 'Less']
+        swt_list = ['120%', '100%', '80%']
+        sum_quantity=0
+
+        for item in shopping_bag:
+            sum_quantity += item.get_quantity()
+
+
+        os.system('cls')
+        table = Table(title="========== 내 장바구니 ===========", show_header=True, header_style="bold magenta", show_footer=True)
+        table.add_column('Selction', 'Total',width=10, justify='center')
+        table.add_column('Menu', width=50, justify='left')
+        table.add_column('Quantity', f'{sum_quantity}',width=10, justify='center')
+        table.add_column('Price', f'{price}',width=10, justify='center')
+
+
+        # print(item.get_size())
+
+        for n, item in enumerate(shopping_bag):
+            table.add_row(f'{n+1}',f'{item.get_size()} {item.get_temp()} {item.get_name()} {item.get_sugar_cnt()}',f'{item.get_quantity()}',
+                                                                                       f'{item.get_price()}')
+
+
+        console = Console()
+        console.print(table)
+
+    def shopping_list2(self, shopping_bag, price, discnt_price):
+        size_list = ['Tall', 'Grande', 'Venti']
+        temp_list = ['HOT', 'ICED']
+        ice_list = ['Extra', 'Normal', 'Less']
+        swt_list = ['120%', '100%', '80%']
+        sum_quantity=0
+
+        for item in shopping_bag:
+            sum_quantity += item.get_quantity()
+
+
+        os.system('cls')
+        table = Table(title="========== 내 장바구니 ===========", show_header=True, header_style="bold magenta", show_footer=True)
+        table.add_column('Selction', 'Final Price',width=15, justify='center',footer_style='bold red')
+        table.add_column('Menu', width=50, justify='left')
+        table.add_column('Quantity', f'{sum_quantity}',width=10, justify='center')
+        table.add_column('Price', f'{price}',width=10, justify='center')
+        table.add_column('Discount', f'{discnt_price-price}',width=10, justify='center',footer_style='red')
+        table.add_column('Price', f'{discnt_price}',width=10, justify='center',footer_style='blink bold red on cyan')
+
+
+        # print(item.get_size())
+
+        for n, item in enumerate(shopping_bag):
+            table.add_row(f'{n+1}',f'{item.get_size()} {item.get_temp()} {item.get_name()} {item.get_sugar_cnt()}',f'{item.get_quantity()}',
+                                                                                       f'{item.get_price()}','')
+
+        console = Console()
+        console.print(table)
+
     def carrier_sel(self):
-        print('사용하고 계신 통신사를 선택해 주세요.')
-        str_carrier_menu = '''
-    1. SKT (10% 할인)
-    2. KT   (10% 할인)
-    3. LGU (5% 할인)
-    4. 해당없음.
-    '''
-        input_carrier = input(str_carrier_menu)
+
+        # os.system('cls')
+        table = Table(title="========== 통신사 선택 ==========", show_header=True, header_style="bold magenta")
+        table.add_column('Selction', width=10, justify='center')
+        table.add_column('Carrier', width=30, justify='left')
+        table.add_column('Discount Rate', width=10, justify='center')
+
+        table.add_row('1', 'SKT', '10%')
+        table.add_row('2', 'KT', '10%')
+        table.add_row('3', 'LG U+', '5%')
+        table.add_row('0', '해당없음', '0%')
+
+        console = Console()
+        console.print(table)
+
+        input_carrier = input('사용하고 계신 통신사를 선택해 주세요.>>')
         return input_carrier
 
     skt = 0.1
@@ -162,18 +227,39 @@ class FinalPage:
                 discount_price = total_price * (1-FinalPage.kt)
             case '3':
                 discount_price = total_price * (1-FinalPage.lgu)
-            case '4':
+            case '0':
                 print('해당되는 할인 항목이 없습니다.')
                 discount_price = total_price
             case _:
-                print('잘못된 통신사입니다.')
-                return 0
+                print('해당되는 할인 항목이 없습니다.')
+                discount_price = total_price
+
+
+
+
 
         return discount_price
 
     def payment(self):      # 1) 결제가능 제한시간, 2) 일정시간(3초) 후 결제완료 메세지 표출
-        method = input('결제 수단을 선택하세요\n1)신용카드 ,2)현금결제, 3)각종 pay\n')
+
+        os.system('cls')
+        table = Table(title="========== 결제 수단 선택 ==========", show_header=True, header_style="bold magenta")
+        table.add_column('Selction', width=10, justify='center')
+        table.add_column('Payment Method', width=30, justify='left')
+
+
+        table.add_row('1', '신용카드')
+        table.add_row('2', '현금결제')
+        table.add_row('3', '각종 pay')
+
+
+        console = Console()
+        console.print(table)
+
+        method = input('결제 수단을 선택하세요.>>')
         flag = 1
+
+        os.system('cls')
 
         match method:
             case '1':   # 신용카드
@@ -211,24 +297,37 @@ class FinalPage:
     members = {'20745440': 2}
 
     def membership(self):
-            member = input('\t멤버쉽 있으신가요?? 1. yes, 2. no\n>>')
-            flag = 1
 
-            match member:
-                case '1' :
-                    # cell_number = input('핸드폰 번호를 입력해주세요')        # try except 가능
-                    FinalPage.add_point(999)
-                case '2':
-                    mem_join = input('\t멤버쉽에 가입하시겠습니까? [1=y]/2=n \n>>')
-                    if mem_join != '2':
-                        FinalPage.join_member(999)
-                    else :
-                        print('\t결제화면으로 이동합니다.')
-                case _:
-                    print('잘못 누르셨습니다.')
-                    flag = 0
+        os.system('cls')
+        table = Table(title="========== Membership ==========", show_header=True, header_style="bold magenta")
+        table.add_column('Selction', width=10, justify='center')
+        table.add_column('Membership', width=40, justify='left')
 
-            return flag
+
+        table.add_row('1', 'Yes')
+        table.add_row('2', 'No')
+
+        console = Console()
+        console.print(table)
+
+        member = input('멤버쉽 있으신가요??>>')
+        flag = 1
+
+        match member:
+            case '1' :
+                # cell_number = input('핸드폰 번호를 입력해주세요')        # try except 가능
+                FinalPage.add_point(999)
+            case '2':
+                mem_join = input('\t멤버쉽에 가입하시겠습니까? [1=y]/2=n \n>>')
+                if mem_join != '2':
+                    FinalPage.join_member(999)
+                else :
+                    print('\t결제화면으로 이동합니다.')
+            case _:
+                print('잘못 누르셨습니다.')
+                flag = 0
+
+        return flag
 
     def add_point(self):
         cell_number = input('핸드폰 번호를 입력해주세요\n>>')
@@ -253,9 +352,9 @@ class FinalPage:
             print(f'회원가입이 완료되었습니다. {cell_number}님의 현재 포인트는 {FinalPage.members[cell_number]} 포인트 입니다.')
 
     def receipt(self):
-        print('주문이 완료 되었습니다. 감사합니다.')
+        print('\t주문이 완료 되었습니다.')
         FinalPage.order_nums += 1
-        print(f'주문번호는 {FinalPage.order_nums}번 입니다. ')
+        print(f'\n\t주문번호는 {FinalPage.order_nums}번 입니다. ')
 
 
 class Welcome:
@@ -282,30 +381,40 @@ __        __         _                                         _
         input('계속하려면 엔터를 눌러주세요...')
 
     def where_menu(self):
-            togo_str = '''
-    --------- 어디에서 드시나요? ---------
-    1. Dine-in (매장)
-    2. To-Go (포장)
-    0. 직원 호출
-    -----------------------------------       
-    선택 >> '''
-            where = input(togo_str)
+
+
+        table = Table(title="========== 어디서 드시나요?? ==========", show_header=True, header_style="bold magenta")
+        table.add_column('Selction', width=10, justify='center')
+        table.add_column('선   택', width=40, justify='center')
+
+        table.add_row('1', 'Dine-in (매장)')
+        table.add_row('2', 'To-Go (포장)')
+        table.add_row('0', '직원 호출')
+
+
+        console = Console()
+        console.print(table)
+
+        where = input("해당 번호를 입력해주세요>>")
+
+
+
 
 
     def byebye(self):
         str_bye = '''
-                                    (  )   (   )  )
-                                 ) (   )  (  (
-                                 ( )  (    ) )
-                                 _____________
-                                <_____________> ___
-                                |             |/ _ \\
-                                |               | | |
-                                |               |_| |
-                             ___|             |\___/
-                            /    \___________/    \\
-                            \_____________________/    
+                    (  )   (   )  )
+                 ) (   )  (  (
+                 ( )  (    ) )
+                 _____________
+                <_____________> ___
+                |             |/ _ \\
+                |               | | |
+                |               |_| |
+             ___|             |\___/
+            /    \___________/    \\
+            \_____________________/    
         '''
-
+        print(str_bye)
         print('☕☕ 서-타-벅스를 이용해 주셔서 감사합니다. ☕☕')
 

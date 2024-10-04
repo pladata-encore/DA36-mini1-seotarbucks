@@ -1,6 +1,9 @@
 from YJ.stbk_entity import FinalPage
 from project_01 import Final_page
 from stbk_entity import StarBucks
+from rich.console import Console
+from rich.table import Column, Table
+import os
 
 import pickle
 import openpyxl as op
@@ -11,18 +14,11 @@ import openpyxl as op
 """
 
 class StarBucks_Repository:
+
+    order_str=[]
+
     def __init__(self):
         pass
-        # print('StarBucks_Repository 인스턴스가 생성되었습니다.')
-        # self.stbks = [
-        #     Coffee('아메리카노','Hot','tall', '보통','보통','매장','False','2','3'),
-        #     Coffee('아메리카노','Iced','grande', '보통','보통','take-out','False','3','2'),
-        #     Coffee('카라멜마끼아또','Hot','grande', '보통','보통','take-out','True','2','1'),
-        #     NonCoffee('자바칩 프라푸치노','Iced','grande', '보통','보통','매장','많이','2'),
-        #     NonCoffee('자몽허니블래티','Iced','grande', '적게','더 달게','take-out','없이','5'),
-        #     NonCoffee('레몬에이드','Iced','Venti', '보통','보통','take-out','없이','1'),
-        #     Coffee('카페모카','Hot','tall', '없이','보통','매장','False','2','3')
-        # ]
 
 
 
@@ -72,55 +68,123 @@ class StarBucks_Repository:
     ----------------------------          
     선택:  """
 
-        menu_name = int(input(coffee_menu_str))
+        os.system('cls')
+        table = Table(title="========== Coffee Menu ==========",show_header=True, header_style="bold magenta")
+        table.add_column('Selction',width=10, justify='center')
+        table.add_column('Menu',width=30, justify='left')
+        table.add_column('Price',width=10, justify='center')
+
+        table.add_row('1','아메리카노','4500원')
+        table.add_row('2','카페라떼','5000원')
+        table.add_row('3','돌체라떼','5500원')
+        table.add_row('4','바닐라 라떼','5500원')
+        table.add_row('5','카라멜마키아토','5500원')
+        table.add_row('0','이전으로 돌아가기','')
+
+
+        console=Console()
+        console.print(table)
+
+        menu_name = int(input('메뉴를 선택해 주세요.>>'))
 
         if menu_name in coffee_menu_list:
             print(f'{coffee_menu_list[menu_name][0]}를 선택하셨습니다.')
+
             temp_list = ['HOT', 'ICED']
-            temp = int(input("""
-    ----HOT / ICED----
-    1. HOT
-    2. ICED (+500 원)    
-    선택:    """))
+
+            os.system('cls')
+            table = Table(title="========== Hot / Cold ==========", show_header=True, header_style="bold magenta")
+            table.add_column('Selction', width=10, justify='center')
+            table.add_column('Menu', width=30, justify='left')
+            table.add_column('Menu', width=10, justify='center')
+
+            table.add_row('1', 'Hot','+0원')
+            table.add_row('2', 'Iced','+500원')
+
+            console = Console()
+            console.print(table)
+
+            temp = int(input('원하시는 항목을 선택해 주세요 >>'))
             if temp == 2:
                 add_on += 500
+                ice_list = ['Extra', 'Normal', 'Less']
 
-            qntt = int(input('\n수량을 입력해주세요\n'))
+                os.system('cls')
+                table = Table(title="========== Ice ==========", show_header=True, header_style="bold magenta")
+                table.add_column('Selction', width=10, justify='center')
+                table.add_column('Ice amount', width=30, justify='left')
+                table.add_column('Extra Charge', width=10, justify='center')
+
+                table.add_row('1', 'Extra', '+0원')
+                table.add_row('2', 'Normal', '+0원')
+                table.add_row('3', 'Less', '+0원')
+
+                console = Console()
+                console.print(table)
+
+
+                ice = int(input('얼음양을 선택해주세요>>'))
+
+
+
+            qntt = int(input('\n수량을 입력해주세요.>>'))
 
             swt_list = ['120%', '100%', '80%']
-            swt = int(input('''
-    ----당도----
-    1. 더 달게(120% + 300원)
-    2. 보통(100%)
-    3. 덜 달게(80%)
-    선택: '''))
+
+            os.system('cls')
+            table = Table(title="========== Sweetness ==========", show_header=True, header_style="bold magenta")
+            table.add_column('Selction', width=10, justify='center')
+            table.add_column('Sweetness', width=30, justify='left')
+            table.add_column('Extra Charge', width=10, justify='center')
+
+            table.add_row('1', '더 달게 120%', '+300원')
+            table.add_row('2', '보통 100%','+0원')
+            table.add_row('3', '덜 달게 80%','+0원')
+
+            console = Console()
+            console.print(table)
+
+            swt = int(input('당도를 선택해주세요>>'))
+
             if swt == 1:
                 add_on += 300
 
             # order.set_sugar_cnt(swt)
+
+            os.system('cls')
+            table = Table(title="========== Size ==========", show_header=True, header_style="bold magenta")
+            table.add_column('Selction', width=10, justify='center')
+            table.add_column('Size', width=30, justify='left')
+            table.add_column('Extra Charge', width=10, justify='center')
+
+            table.add_row('1', 'Tall', '+0원')
+            table.add_row('2', 'Grande','+700원')
+            table.add_row('3', 'Venti','+1000원')
+
+            console = Console()
+            console.print(table)
             size_list = ['Tall', 'Grande', 'Venti']
-            size = int(input('''
-    ----사이즈----
-    1. Tall (+0 원)
-    2. Grande (+700 원)
-    3. Venti (+1000 원)
-    선택: '''))
+            size = int(input('음료 사이즈를 선택해주세요>>'))
+
             if size == 2:
                 add_on += 700
             elif size == 3:
                 add_on += 1000
 
-            print(
-                f'{coffee_menu_list[menu_name][0]} {temp_list[temp - 1]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}를 선택하셨습니다 ')
+            bags_str = f'{temp_list[temp - 1]} {coffee_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}'
+            print(f'{bags_str}를 선택하셨습니다 ')
+            StarBucks_Repository.order_str.append(bags_str)
 
             order = StarBucks(coffee_menu_list[menu_name][0])
             # order.set_name(coffee_menu_list[menu_name][0])
-            order.set_temp(temp)
+            order.set_temp(temp_list[temp - 1])
             order.set_quantity(qntt)
             order.set_size(size_list[size - 1])
-            order.set_sugar_cnt(swt)
+            order.set_sugar_cnt(swt_list[swt - 1])
+            if temp =='2':
+                order.set_amnt_ice(ice_list[ice - 1])
             order.set_price((coffee_menu_list[menu_name][1] + add_on) * qntt)
-            print(order)
+            # print(order)
 
         elif menu_name == 0:
             return
@@ -153,54 +217,104 @@ class StarBucks_Repository:
     선택:>>"""
 
             re_flag = 1
-            menu_name = int(input(blended_menu_str))
+
+            os.system('cls')
+            table = Table(title="========== Coffee Menu ==========", show_header=True, header_style="bold magenta")
+            table.add_column('Selction', width=10, justify='center')
+            table.add_column('Menu', width=30, justify='left')
+            table.add_column('Price', width=10, justify='center')
+
+            table.add_row('1', '녹차 프라푸치노', '6500원')
+            table.add_row('2', '자바칩 프라푸치노', '7000원')
+            table.add_row('3', '피치 아사이 리프레셔', '6000원')
+            table.add_row('4', '딸기 아사이 리프레셔', '6000원')
+            table.add_row('5', '망고 리프레셔', '6000원')
+            table.add_row('0', '이전으로 돌아가기', '')
+
+            console = Console()
+            console.print(table)
+
+            menu_name = int(input('메뉴를 선택해 주세요.>>'))
+
             add_on = 0
 
             if menu_name in blended_menu_list:
                 print(f'{blended_menu_list[menu_name][0]}를 선택하셨습니다.')
 
-                qntt = int(input('\t수량을 입력해 주세요\n>>'))
+                qntt = int(input('\n수량을 입력해 주세요>>'))
+
+                os.system('cls')
+                table = Table(title="========== Sweetness ==========", show_header=True, header_style="bold magenta")
+                table.add_column('Selction', width=10, justify='center')
+                table.add_column('Sweetness', width=30, justify='left')
+                table.add_column('Extra Charge', width=10, justify='center')
+
+                table.add_row('1', '더 달게 120%', '+300원')
+                table.add_row('2', '보통 100%', '+0원')
+                table.add_row('3', '덜 달게 80%', '+0원')
+
+                console = Console()
+                console.print(table)
 
                 swt_list = ['120%', '100%', '80%']
-
-                swt = int(input('''
-                
-    ---- 당도를 입력해주세요 ---- 
-    1 = 더 달게 120% (+300원)
-    2 = 보통 100%
-    3 = 덜 달게 80%
-    >>'''))
+                swt = int(input('당도를 선택해주세요>>'))
 
                 if swt == 1:
                     add_on += 300
 
+
+                os.system('cls')
+                table = Table(title="========== Size ==========", show_header=True, header_style="bold magenta")
+                table.add_column('Selction', width=10, justify='center')
+                table.add_column('Size', width=30, justify='left')
+                table.add_column('Extra Charge', width=10, justify='center')
+
+                table.add_row('1', 'Tall', '+0원')
+                table.add_row('2', 'Grande', '+700원')
+                table.add_row('3', 'Venti', '+1000원')
+
+                console = Console()
+                console.print(table)
                 size_list = ['Tall', 'Grande', 'Venti']
-                size = int(input(''' 
-    ---- 사이즈를 입력해주세요. ----
-    1 = Tall(+0원)
-    2 = Grande(+700원)
-    3 = Venti(+1000원)
-    >>'''))
+                size = int(input('음료 사이즈를 선택해주세요>>'))
+
                 if size == 2:
                     add_on += 700
                 elif size == 3:
                     add_on += 1000
 
+
+
+                os.system('cls')
+                table = Table(title="========== Ice ==========", show_header=True, header_style="bold magenta")
+                table.add_column('Selction', width=10, justify='center')
+                table.add_column('Ice amount', width=30, justify='left')
+                table.add_column('Extra Charge', width=10, justify='center')
+
+                table.add_row('1', 'Extra', '+0원')
+                table.add_row('2', 'Normal', '+0원')
+                table.add_row('3', 'Less', '+0원')
+
+                console = Console()
+                console.print(table)
+
                 ice_list = ['Extra', 'Normal', 'Less']
-                ice = int(input('''
-    ---- 얼음양을 입력해주세요. ----
-    1 = Extra
-    2 = Normal
-    3 = Less
-    >>'''))
+                ice = int(input('얼음양을 선택해주세요>>'))
+
+    #             ice = int(input('''
+    # ---- 얼음양을 입력해주세요. ----
+    # 1 = Extra
+    # 2 = Normal
+    # 3 = Less
+    # >>'''))
             elif menu_name == 0:
                 return
             else:
                 print('잘못 선택하셨습니다. 다시 선택해주세요')
                 return self.blended_menu()
-
-            print(
-                f'{blended_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}를 선택하셨습니다 ')
+            bags_str = f'{blended_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}'
+            print(f'{bags_str}를 선택하셨습니다 ')
+            StarBucks_Repository.order_str.append(bags_str)
 
             order = StarBucks(blended_menu_list[menu_name][0])
             # order.set_name(coffee_menu_list[menu_name][0])
@@ -219,87 +333,152 @@ class StarBucks_Repository:
             return order
 
 
-
-
-
             # return FinalPage.cart_price_sum(999,bags)
 
     def noncoffee_menu(self):
-        blended_menu_list = {
+        noncoffee_menu_list = {
             1: ('녹차 라테', 6500),
             2: ('라이트 자몽 피지오', 5800),
             3: ('복숭아 아이스 티', 5900),
             4: ('딸기에이드', 5500),
             5: ('레몬에이드', 5500)
         }
-        blended_menu_str = """
-    ---------Blended Menu--------
-    1. 녹차 라테             =========     6500 원
-    2. 라이트 자몽 피지오     =========     5800 원
-    3. 복숭아 아이스 티      =========     5900 원
-    4. 딸기에이드           =========     5500 원
-    5. 레몬에이드           =========     5500 원
-    0. 이전으로 돌아가기
-    ----------------------------          
-    선택:>>"""
+    #     blended_menu_str = """
+    # ---------Blended Menu--------
+    # 1. 녹차 라테             =========     6500 원
+    # 2. 라이트 자몽 피지오     =========     5800 원
+    # 3. 복숭아 아이스 티      =========     5900 원
+    # 4. 딸기에이드           =========     5500 원
+    # 5. 레몬에이드           =========     5500 원
+    # 0. 이전으로 돌아가기
+    # ----------------------------
+    # 선택:>>"""
 
         re_flag = 1
-        menu_name = int(input(blended_menu_str))
+
+        os.system('cls')
+        table = Table(title="========== Coffee Menu ==========", show_header=True, header_style="bold magenta")
+        table.add_column('Selction', width=10, justify='center')
+        table.add_column('Menu', width=30, justify='left')
+        table.add_column('Price', width=10, justify='center')
+
+        table.add_row('1', '녹차 라테', '6500원')
+        table.add_row('2', '라이트 자몽 피지오', '5800원')
+        table.add_row('3', '복숭아 아이스 티', '5900원')
+        table.add_row('4', '딸기에이드', '5500원')
+        table.add_row('5', '레몬에이드', '5500원')
+        table.add_row('0', '이전으로 돌아가기', '')
+
+        console = Console()
+        console.print(table)
+
+        menu_name = int(input('메뉴를 선택해 주세요.>>'))
+
         add_on = 0
 
-        if menu_name in blended_menu_list:
-            print(f'{blended_menu_list[menu_name][0]}를 선택하셨습니다.')
+        if menu_name in noncoffee_menu_list:
+            print(f'{noncoffee_menu_list[menu_name][0]}를 선택하셨습니다.')
+
+            temp_list = ['HOT', 'ICED']
+
+            os.system('cls')
+            table = Table(title="========== Hot / Cold ==========", show_header=True, header_style="bold magenta")
+            table.add_column('Selction', width=10, justify='center')
+            table.add_column('Menu', width=30, justify='left')
+            table.add_column('Menu', width=10, justify='center')
+
+            table.add_row('1', 'Hot', '+0원')
+            table.add_row('2', 'Iced', '+500원')
+
+            console = Console()
+            console.print(table)
+
+            temp = int(input('원하시는 항목을 선택해 주세요 >>'))
+            if temp == 2:
+                add_on += 500
+                ice_list = ['Extra', 'Normal', 'Less']
+
+                os.system('cls')
+                table = Table(title="========== Ice ==========", show_header=True, header_style="bold magenta")
+                table.add_column('Selction', width=10, justify='center')
+                table.add_column('Ice amount', width=30, justify='left')
+                table.add_column('Extra Charge', width=10, justify='center')
+
+                table.add_row('1', 'Extra', '+0원')
+                table.add_row('2', 'Normal', '+0원')
+                table.add_row('3', 'Less', '+0원')
+
+                console = Console()
+                console.print(table)
+
+                ice = int(input('얼음양을 선택해주세요>>'))
 
             qntt = int(input('수량을 입력해 주세요\n>>'))
 
             swt_list = ['120%', '100%', '80%']
 
-            swt = int(input('''
+            os.system('cls')
+            table = Table(title="========== Sweetness ==========", show_header=True, header_style="bold magenta")
+            table.add_column('Selction', width=10, justify='center')
+            table.add_column('Sweetness', width=30, justify='left')
+            table.add_column('Extra Charge', width=10, justify='center')
 
-    ---- 당도를 입력해주세요 ---- 
-    1=120% (+300)
-    2=100%
-    3=80%
-    >>'''))
+            table.add_row('1', '더 달게 120%', '+300원')
+            table.add_row('2', '보통 100%', '+0원')
+            table.add_row('3', '덜 달게 80%', '+0원')
+
+            console = Console()
+            console.print(table)
+
+            swt = int(input('당도를 선택해주세요>>'))
 
             if swt == 1:
                 add_on += 300
 
             size_list = ['Tall', 'Grande', 'Venti']
-            size = int(input(''' 
-    ---- 사이즈를 입력해주세요. ----
-    1 = Tall(+0)
-    2 = Grande(+700)
-    3 = Venti(+1000)
-    >>'''))
+            os.system('cls')
+            table = Table(title="========== Size ==========", show_header=True, header_style="bold magenta")
+            table.add_column('Selction', width=10, justify='center')
+            table.add_column('Size', width=30, justify='left')
+            table.add_column('Extra Charge', width=10, justify='center')
+
+            table.add_row('1', 'Tall', '+0원')
+            table.add_row('2', 'Grande', '+700원')
+            table.add_row('3', 'Venti', '+1000원')
+
+            console = Console()
+            console.print(table)
+
+            size = int(input('음료 사이즈를 선택해주세요>>'))
+
             if size == 2:
                 add_on += 700
             elif size == 3:
                 add_on += 1000
 
-            ice_list = ['Extra', 'Normal', 'Less']
-            ice = int(input('''
-    ---- 얼음양을 입력해주세요. ----
-    1 = Extra
-    2 = Normal
-    3 = Less
-    >>'''))
+
+
+
+
         elif menu_name == 0:
             return
         else:
             print('잘못 선택하셨습니다. 다시 선택해주세요')
             return self.blended_menu()
 
-        print(
-            f'{blended_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}를 선택하셨습니다 ')
+        bags_str = f'{noncoffee_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}'
+        print(f'{bags_str}를 선택하셨습니다')
+        StarBucks_Repository.order_str.append(bags_str)
 
-        order = StarBucks(blended_menu_list[menu_name][0])
+        order = StarBucks(noncoffee_menu_list[menu_name][0])
         # order.set_name(coffee_menu_list[menu_name][0])
         order.set_quantity(qntt)
+        order.set_temp(temp_list[temp-1])
         order.set_size(size_list[size - 1])
-        order.set_amnt_ice(ice_list[ice - 1])
         order.set_sugar_cnt(swt_list[swt - 1])
-        order.set_price((blended_menu_list[menu_name][1] + add_on) * qntt)
+        if temp == '2':
+            order.set_amnt_ice(ice_list[ice - 1])
+        order.set_price((noncoffee_menu_list[menu_name][1] + add_on) * qntt)
 
         # print(order)
 

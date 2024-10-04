@@ -73,12 +73,16 @@ class StarBucks_Menu:
                     orders = self.stbk_service.find_all()
                     self.print_stbks(orders)
                     print('😀😀매출정보를 불러왔습니다.😀😀')
+
                 # 매출 액셀로 내보내기
                 case '2':
+
                     orders = self.stbk_service.find_all()
                     self.stbk_service.push(orders)
+
                 case '0':
                     return
+
                 case _:
                     print('>> 잘못 선택 하셨습니다.')
 

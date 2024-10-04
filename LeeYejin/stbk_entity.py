@@ -99,50 +99,6 @@ class StarBucks:
         return f"""
 {self.__id}번, 상품명:{self.__menu_name}, 사이즈:{self.__size}, 얼음량:{self.__amnt_ice}, 당도:{self.__sugar_cnt}, 컵:{self.__cup}, 수량:{self.__quantity}개, 가격:{self.__price}
 """
-# 자식(상품)클래스 선언 - 카테고리
-class Coffee(StarBucks):
-    def __init__(self, menu_name, temp, size, amnt_ice, sugar_cnt, cup, decaffein, shot, quantity):
-        super().__init__(menu_name, temp, size, amnt_ice, sugar_cnt, cup, quantity)
-        self.__decaffein = decaffein
-        self.__shot = shot
-    def get_decaffein(self):
-        return self.__decaffein
-    def set_decaffein(self, decaffein):
-       self.__decaffein = decaffein
-    def get_shot(self):
-        return self.__shot
-    def set_shot(self, shot):
-       self.__shot = shot
-       # # 마진 계산 - 커피 모두 0.05 라고 가정.
-       # def calculate_margin(self):
-       #     return self.price * .05
-    def __repr__(self):
-        return f"""
-{super().__repr__()}\n디카페인 선택: {self.__decaffein}
-샷:{self.__shot}
-{'-'*30}
-"""
-"""
-1. 마진=판매가격-공급가액
-2. 마진율=(판매가격-공급가액)/판매가격×100%
-3. 판매가격=공급가액/(1-마진율)
-"""
-class NonCoffee(StarBucks):
-    def __init__(self, name, temp, size, amnt_ice, sugar_cnt, cup,whipping, quantity):
-        super().__init__( name, temp, size, amnt_ice, sugar_cnt, cup, quantity)
-        self.__whipping = whipping
-    def get_whipping(self):
-        return self.__whipping
-    def set_whipping(self, whipping):
-        self.__whipping = whipping
-    # # 마진 계산 - 음료 모두 0.08 라고 가정.
-    # def calculate_margin(self):
-    #     return self.price * .08
-    def __repr__(self):
-        return f"""
-{super().__repr__()}\n휘핑: {self.__whipping}
-{'-'*30}
-"""
 
 class Shopping_bag:
     orders = []

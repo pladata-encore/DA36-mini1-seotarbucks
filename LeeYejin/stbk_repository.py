@@ -13,25 +13,17 @@ import openpyxl as op
 class StarBucks_Repository:
     def __init__(self):
         print('StarBucks_Repository 인스턴스가 생성되었습니다.')
-        # self.stbks = [
-        #     Coffee('아메리카노','Hot','tall', '보통','보통','매장','False','2','3'),
-        #     Coffee('아메리카노','Iced','grande', '보통','보통','take-out','False','3','2'),
-        #     Coffee('카라멜마끼아또','Hot','grande', '보통','보통','take-out','True','2','1'),
-        #     NonCoffee('자바칩 프라푸치노','Iced','grande', '보통','보통','매장','많이','2'),
-        #     NonCoffee('자몽허니블래티','Iced','grande', '적게','더 달게','take-out','없이','5'),
-        #     NonCoffee('레몬에이드','Iced','Venti', '보통','보통','take-out','없이','1'),
-        #     Coffee('카페모카','Hot','tall', '없이','보통','매장','False','2','3')
-        # ]
+        orders = []
 
 
 
 
     def find_all(self):
-            return self.stbks
+            return self.orders
         # TODO 추가했으면 하는것..커피/음료에서 얼음이 안들어가는것(HOT, 프라푸치노,...),휘핑이 원래 안들어가는것들(아메리카노, 자허블, ...)은 옵션이 안보이게 하고 싶다...
-    def push(self, stbks):
-        return self.create_workbook(stbks)
-    def create_workbook(self, stbks):
+    def push(self, orders):
+        return self.create_workbook(orders)
+    def create_workbook(self, orders):
         wb = op.Workbook()
         ws = wb.active
         ws['A1'].value = '번호'
@@ -41,11 +33,11 @@ class StarBucks_Repository:
         # ws['E1'].value = '마진'
         # https://post.naver.com/viewer/postView.nhn?volumeNo=17083716&memberNo=6347519
         no = 1
-        for stbk in stbks:
-            ws[f'A{no + 1}'] = stbk.get_id()
-            ws[f'B{no + 1}'] = stbk.get_name()
-            ws[f'C{no + 1}'] = stbk.get_quantity()
-            ws[f'D{no + 1}'] = stbk.get_sv()
+        for order in orders:
+            ws[f'A{no + 1}'] = order.get_id()
+            ws[f'B{no + 1}'] = order.get_name()
+            ws[f'C{no + 1}'] = order.get_quantity()
+            ws[f'D{no + 1}'] = order.get_sv()
             no += 1
         wb.save('starbucks.xlsx')
         print('☕☕엑셀파일이 생성되었습니다.☕☕')
@@ -80,6 +72,16 @@ class StarBucks_Repository:
 1. HOT
 2. ICED    
 선택:    """))
+                if temp == 2:
+                    amnt_ice_list = ['적게', '보통', '많이']
+                    amnt_ice = int(input('''
+----얼음량----
+1. 적게
+2. 보통
+3. 많게
+선택: '''))
+                else:
+                    pass
                 qntt = int(input('수량을 입력해주세요'))
                 swt_list = ['120%', '100%', '80%']
                 swt = int(input('''
@@ -100,11 +102,12 @@ class StarBucks_Repository:
                     f'{coffee_menu_list[menu_name][0]} {temp_list[temp - 1]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}를 선택하셨습니다 ')
 
                 order = StarBucks(coffee_menu_list[menu_name][0])
-                # order.set_name(coffee_menu_list[menu_name][0])
                 order.set_temp(temp)
                 order.set_quantity(qntt)
                 order.set_size(size_list[size - 1])
+                order.set_amnt_ice(amnt_ice)
                 order.set_sugar_cnt(swt)
+                order.set_price(coffee_menu_list[menu_name][1]*qntt)
                 print(order)
             elif menu_name == 0:
                 return

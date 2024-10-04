@@ -10,3 +10,6 @@ class StarBucks_Service:
 
     def coffee_menu(self):
         return self.stbk_repository.coffee_menu()
+
+    def shopping_bag(self):
+        return self.stbk_repository.shopping_bag()

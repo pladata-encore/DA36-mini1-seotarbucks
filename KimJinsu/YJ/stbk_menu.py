@@ -2,6 +2,7 @@ from stbk_service import StarBucks_Service
 from rich.console import Console
 from rich.table import Column, Table
 import os
+import time
 
 
 
@@ -22,10 +23,6 @@ class StarBucks_Menu:
     # 0. 주문 종료
     # ----------------------
     # 선택: """
-
-
-
-
 
 
         while True:
@@ -69,15 +66,18 @@ class StarBucks_Menu:
                         print('>> 비밀번호를 틀렸습니다.')
 
                 case '0':
-                    return
+                    return 999
 
                 case _:
-                    print('>> 잘못 선택하셨습니다.')
+                    print('>> 잘못 선택하셨습니다. 다시 선택해 주세요.')
+                    time.sleep(1)
+                    continue
 
-            re_flag = input('\n더 주문하시겠어요? [y=1/n=0]')
-            if re_flag == '0':
-                # print(shopping_bag)
-                break
+            if order:
+                re_flag = input('\n더 주문하시겠어요? [yes=1] / no=0\n>>')
+                if re_flag == '0':
+                    # print(shopping_bag)
+                    break
 
         return shopping_bag
 

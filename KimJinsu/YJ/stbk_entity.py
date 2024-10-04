@@ -147,8 +147,8 @@ class FinalPage:
 
         os.system('cls')
         table = Table(title="========== 내 장바구니 ===========", show_header=True, header_style="bold magenta", show_footer=True)
-        table.add_column('Selction', 'Total',width=10, justify='center')
-        table.add_column('Menu', width=50, justify='left')
+        table.add_column('Selction',width=15, justify='center')
+        table.add_column('Menu', 'Total',width=50, justify='center')
         table.add_column('Quantity', f'{sum_quantity}',width=10, justify='center')
         table.add_column('Price', f'{price}',width=10, justify='center')
 
@@ -156,7 +156,7 @@ class FinalPage:
         # print(item.get_size())
 
         for n, item in enumerate(shopping_bag):
-            table.add_row(f'{n+1}',f'{item.get_size()} {item.get_temp()} {item.get_name()} {item.get_sugar_cnt()}',f'{item.get_quantity()}',
+            table.add_row(f'{n+1}',f'{item.get_size()} {item.get_temp()} {item.get_name()} 당도:{item.get_sugar_cnt()} 얼음양:{item.get_amnt_ice()}',f'{item.get_quantity()}',
                                                                                        f'{item.get_price()}')
 
 
@@ -176,8 +176,8 @@ class FinalPage:
 
         os.system('cls')
         table = Table(title="========== 내 장바구니 ===========", show_header=True, header_style="bold magenta", show_footer=True)
-        table.add_column('Selction', 'Final Price',width=15, justify='center',footer_style='bold red')
-        table.add_column('Menu', width=50, justify='left')
+        table.add_column('Selction', width=15, justify='center',footer_style='bold red')
+        table.add_column('Menu', 'Total',width=50, justify='center')
         table.add_column('Quantity', f'{sum_quantity}',width=10, justify='center')
         table.add_column('Price', f'{price}',width=10, justify='center')
         table.add_column('Discount', f'{discnt_price-price}',width=10, justify='center',footer_style='red')
@@ -187,7 +187,7 @@ class FinalPage:
         # print(item.get_size())
 
         for n, item in enumerate(shopping_bag):
-            table.add_row(f'{n+1}',f'{item.get_size()} {item.get_temp()} {item.get_name()} {item.get_sugar_cnt()}',f'{item.get_quantity()}',
+            table.add_row(f'{n+1}',f'{item.get_size()} {item.get_temp()} {item.get_name()} 당도:{item.get_sugar_cnt()} 얼음양:{item.get_amnt_ice()}',f'{item.get_quantity()}',
                                                                                        f'{item.get_price()}','')
 
         console = Console()
@@ -197,9 +197,9 @@ class FinalPage:
 
         # os.system('cls')
         table = Table(title="========== 통신사 선택 ==========", show_header=True, header_style="bold magenta")
-        table.add_column('Selction', width=10, justify='center')
-        table.add_column('Carrier', width=30, justify='left')
-        table.add_column('Discount Rate', width=10, justify='center')
+        table.add_column('Selction', width=15, justify='center')
+        table.add_column('Carrier', width=50, justify='left')
+        table.add_column('Discount Rate', width=20, justify='center')
 
         table.add_row('1', 'SKT', '10%')
         table.add_row('2', 'KT', '10%')
@@ -208,8 +208,14 @@ class FinalPage:
 
         console = Console()
         console.print(table)
+        while True:
+            try:
+                input_carrier = input('사용하고 계신 통신사를 선택해 주세요.>>')
+                if input_carrier in['1','2','3','0']:
+                    break
+            except:
+                print('Selection에 있는 "정수"로 다시 입력해주세요')
 
-        input_carrier = input('사용하고 계신 통신사를 선택해 주세요.>>')
         return input_carrier
 
     skt = 0.1
@@ -235,9 +241,6 @@ class FinalPage:
                 discount_price = total_price
 
 
-
-
-
         return discount_price
 
     def payment(self):      # 1) 결제가능 제한시간, 2) 일정시간(3초) 후 결제완료 메세지 표출
@@ -256,7 +259,15 @@ class FinalPage:
         console = Console()
         console.print(table)
 
-        method = input('결제 수단을 선택하세요.>>')
+        while True:
+            try:
+                method = input('결제 수단을 선택하세요.>>')
+                if method in ['1','2','3']:
+                    break
+                else:
+                    print('잘못된 선택입니다.')
+            except:
+                print('Selection에 있는 "정수"로 다시 입력해주세요')
         flag = 1
 
         os.system('cls')
@@ -310,7 +321,14 @@ class FinalPage:
         console = Console()
         console.print(table)
 
-        member = input('멤버쉽 있으신가요??>>')
+        while True:
+
+            member = input('멤버쉽 있으신가요??>>')
+            if member in ['1','2']:
+                break
+            else:
+                print('Selection에 있는 "정수"로 다시 입력해주세요')
+
         flag = 1
 
         match member:
@@ -318,11 +336,11 @@ class FinalPage:
                 # cell_number = input('핸드폰 번호를 입력해주세요')        # try except 가능
                 FinalPage.add_point(999)
             case '2':
-                mem_join = input('\t멤버쉽에 가입하시겠습니까? [1=y]/2=n \n>>')
+                mem_join = input('멤버쉽에 가입하시겠습니까? [1=y]/2=n \n>>')
                 if mem_join != '2':
                     FinalPage.join_member(999)
                 else :
-                    print('\t결제화면으로 이동합니다.')
+                    print('결제화면으로 이동합니다.')
             case _:
                 print('잘못 누르셨습니다.')
                 flag = 0
@@ -347,9 +365,11 @@ class FinalPage:
             FinalPage.members[cell_number] += 1  # members : 멤버쉽 딕셔너리들, 값들은 숫자여야 함.
             print('가입된 회원 정보가 있습니다.')
             print(f'1포인트 적립이 완료 되었습니다. {cell_number}님의 현재 포인트는 {FinalPage.members[cell_number]} 포인트 입니다.')
+            input('엔터를 눌러주세요')
         else:
             FinalPage.members[cell_number] = 1    # 딕셔너리에 멤버 추가
             print(f'회원가입이 완료되었습니다. {cell_number}님의 현재 포인트는 {FinalPage.members[cell_number]} 포인트 입니다.')
+            input('엔터를 눌러주세요')
 
     def receipt(self):
         print('\t주문이 완료 되었습니다.')
@@ -360,6 +380,7 @@ class FinalPage:
 class Welcome:
     def __init__(self):
         pass
+
     def welcome_page(self):
         print('''
 =================================================================================
@@ -382,7 +403,7 @@ __        __         _                                         _
 
     def where_menu(self):
 
-
+        os.system('cls')
         table = Table(title="========== 어디서 드시나요?? ==========", show_header=True, header_style="bold magenta")
         table.add_column('Selction', width=10, justify='center')
         table.add_column('선   택', width=40, justify='center')
@@ -396,6 +417,7 @@ __        __         _                                         _
         console.print(table)
 
         where = input("해당 번호를 입력해주세요>>")
+        return where
 
 
 

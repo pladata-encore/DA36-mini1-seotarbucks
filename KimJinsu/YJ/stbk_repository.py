@@ -1,3 +1,5 @@
+import time
+
 from YJ.stbk_entity import FinalPage
 from project_01 import Final_page
 from stbk_entity import StarBucks
@@ -85,7 +87,12 @@ class StarBucks_Repository:
         console=Console()
         console.print(table)
 
-        menu_name = int(input('메뉴를 선택해 주세요.>>'))
+        while True:
+            try:
+                menu_name = int(input('메뉴를 선택해 주세요.>>'))
+                break
+            except:
+                print('Selection에 있는 "정수"로 다시 입력해주세요')
 
         if menu_name in coffee_menu_list:
             print(f'{coffee_menu_list[menu_name][0]}를 선택하셨습니다.')
@@ -104,7 +111,19 @@ class StarBucks_Repository:
             console = Console()
             console.print(table)
 
-            temp = int(input('원하시는 항목을 선택해 주세요 >>'))
+            while True:
+                try:
+                    temp = int(input('원하시는 항목을 선택해 주세요 >>'))
+                    if temp in [1, 2]:
+                        break
+                    else:
+                        print('다시 입력해주세요.')
+                except:
+                    print('Selection에 있는 "정수"로 다시 입력해주세요')
+
+
+
+
             if temp == 2:
                 add_on += 500
                 ice_list = ['Extra', 'Normal', 'Less']
@@ -113,7 +132,7 @@ class StarBucks_Repository:
                 table = Table(title="========== Ice ==========", show_header=True, header_style="bold magenta")
                 table.add_column('Selction', width=10, justify='center')
                 table.add_column('Ice amount', width=30, justify='left')
-                table.add_column('Extra Charge', width=10, justify='center')
+                table.add_column('Extra Charge', width=20, justify='center')
 
                 table.add_row('1', 'Extra', '+0원')
                 table.add_row('2', 'Normal', '+0원')
@@ -122,12 +141,24 @@ class StarBucks_Repository:
                 console = Console()
                 console.print(table)
 
+                while True:
+                    try:
+                        ice = int(input('얼음양을 선택해주세요>>'))
+                        if ice in [1,2,3]:
+                            break
+                        else:
+                            print('다시 입력해주세요.')
+                    except:
+                        print('Selection에 있는 "정수"로 다시 입력해주세요')
 
-                ice = int(input('얼음양을 선택해주세요>>'))
 
+            while True:
+                try:
+                    qntt = int(input('\n수량을 입력해주세요.>>'))
+                    break
+                except:
+                    print('"정수"로 다시 입력해주세요')
 
-
-            qntt = int(input('\n수량을 입력해주세요.>>'))
 
             swt_list = ['120%', '100%', '80%']
 
@@ -144,10 +175,19 @@ class StarBucks_Repository:
             console = Console()
             console.print(table)
 
-            swt = int(input('당도를 선택해주세요>>'))
+            while True:
+                try:
+                    swt = int(input('당도를 선택해주세요>>'))
+                    if swt == 1:
+                        add_on += 300
+                    if swt in [1, 2, 3]:
+                        break
+                    else:
+                        print('다시 입력해주세요.')
+                except:
+                    print('Selection에 있는 "정수"로 다시 입력해주세요')
 
-            if swt == 1:
-                add_on += 300
+
 
             # order.set_sugar_cnt(swt)
 
@@ -164,12 +204,23 @@ class StarBucks_Repository:
             console = Console()
             console.print(table)
             size_list = ['Tall', 'Grande', 'Venti']
-            size = int(input('음료 사이즈를 선택해주세요>>'))
 
-            if size == 2:
-                add_on += 700
-            elif size == 3:
-                add_on += 1000
+
+            while True:
+                try:
+                    size = int(input('음료 사이즈를 선택해주세요>>'))
+                    if size == 2:
+                        add_on += 700
+                    elif size == 3:
+                        add_on += 1000
+                    if size in [1, 2, 3]:
+                        break
+                    else:
+                        print('다시 입력해주세요.')
+                except:
+                    print('Selection에 있는 "정수"로 다시 입력해주세요')
+
+
 
             bags_str = f'{temp_list[temp - 1]} {coffee_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}'
             print(f'{bags_str}를 선택하셨습니다 ')
@@ -181,7 +232,7 @@ class StarBucks_Repository:
             order.set_quantity(qntt)
             order.set_size(size_list[size - 1])
             order.set_sugar_cnt(swt_list[swt - 1])
-            if temp =='2':
+            if temp == 2:
                 order.set_amnt_ice(ice_list[ice - 1])
             order.set_price((coffee_menu_list[menu_name][1] + add_on) * qntt)
             # print(order)
@@ -191,6 +242,7 @@ class StarBucks_Repository:
 
         else:
             print('잘못 선택하셨습니다. 다시 선택해주세요')
+            time.sleep(1)
             return self.coffee_menu()
 
 
@@ -234,14 +286,26 @@ class StarBucks_Repository:
             console = Console()
             console.print(table)
 
-            menu_name = int(input('메뉴를 선택해 주세요.>>'))
+            while True:
+                try:
+                    menu_name = int(input('메뉴를 선택해 주세요.>>'))
+                    break
+                except:
+                    print('"정수"로 다시 입력해주세요')
+
 
             add_on = 0
 
             if menu_name in blended_menu_list:
                 print(f'{blended_menu_list[menu_name][0]}를 선택하셨습니다.')
 
-                qntt = int(input('\n수량을 입력해 주세요>>'))
+                while True:
+                    try:
+                        qntt = int(input('\n수량을 입력해 주세요>>'))
+                        break
+                    except:
+                        print('Selection에 있는 "정수"로 다시 입력해주세요')
+
 
                 os.system('cls')
                 table = Table(title="========== Sweetness ==========", show_header=True, header_style="bold magenta")
@@ -257,10 +321,22 @@ class StarBucks_Repository:
                 console.print(table)
 
                 swt_list = ['120%', '100%', '80%']
-                swt = int(input('당도를 선택해주세요>>'))
+                while True:
+                    try:
+                        swt = int(input('당도를 선택해주세요>>'))
+                        if swt == 1:
+                            add_on += 300
+                        if swt in [1,2,3]:
+                                break
+                        else:
+                            print('Selection에 있는 "정수"로 다시 입력해주세요')
+                    except:
+                        print('Selection에 있는 "정수"로 다시 입력해주세요')
 
-                if swt == 1:
-                    add_on += 300
+
+
+
+
 
 
                 os.system('cls')
@@ -276,13 +352,18 @@ class StarBucks_Repository:
                 console = Console()
                 console.print(table)
                 size_list = ['Tall', 'Grande', 'Venti']
-                size = int(input('음료 사이즈를 선택해주세요>>'))
 
-                if size == 2:
-                    add_on += 700
-                elif size == 3:
-                    add_on += 1000
-
+                while True:
+                    try:
+                        size = int(input('음료 사이즈를 선택해주세요>>'))
+                        if size == 2:
+                            add_on += 700
+                        elif size == 3:
+                            add_on += 1000
+                        if size in [1, 2, 3]:
+                            break
+                    except:
+                        print('Selection에 있는 "정수"로 다시 입력해주세요')
 
 
                 os.system('cls')
@@ -299,19 +380,22 @@ class StarBucks_Repository:
                 console.print(table)
 
                 ice_list = ['Extra', 'Normal', 'Less']
-                ice = int(input('얼음양을 선택해주세요>>'))
 
-    #             ice = int(input('''
-    # ---- 얼음양을 입력해주세요. ----
-    # 1 = Extra
-    # 2 = Normal
-    # 3 = Less
-    # >>'''))
+                while True:
+                    try:
+                        ice = int(input('얼음양을 선택해주세요>>'))
+                        if ice in [1,2,3]:
+                            break
+                    except:
+                        print('Selection에 있는 "정수"로 다시 입력해주세요')
+
             elif menu_name == 0:
                 return
             else:
                 print('잘못 선택하셨습니다. 다시 선택해주세요')
+                time.sleep(1)
                 return self.blended_menu()
+
             bags_str = f'{blended_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}'
             print(f'{bags_str}를 선택하셨습니다 ')
             StarBucks_Repository.order_str.append(bags_str)
@@ -357,7 +441,7 @@ class StarBucks_Repository:
         re_flag = 1
 
         os.system('cls')
-        table = Table(title="========== Coffee Menu ==========", show_header=True, header_style="bold magenta")
+        table = Table(title="========== Non Coffee Menu ==========", show_header=True, header_style="bold magenta")
         table.add_column('Selction', width=10, justify='center')
         table.add_column('Menu', width=30, justify='left')
         table.add_column('Price', width=10, justify='center')
@@ -371,8 +455,14 @@ class StarBucks_Repository:
 
         console = Console()
         console.print(table)
+        while True:
+            try:
+                menu_name = int(input('메뉴를 선택해 주세요.>>'))
+                if menu_name in [1,2,3,4,5,0]:
+                    break
+            except:
+                print('Selection에 있는 "정수"로 다시 입력해주세요')
 
-        menu_name = int(input('메뉴를 선택해 주세요.>>'))
 
         add_on = 0
 
@@ -393,27 +483,46 @@ class StarBucks_Repository:
             console = Console()
             console.print(table)
 
-            temp = int(input('원하시는 항목을 선택해 주세요 >>'))
-            if temp == 2:
-                add_on += 500
-                ice_list = ['Extra', 'Normal', 'Less']
+            while True:
+                try:
+                    temp = int(input('원하시는 음료 종류를 선택해 주세요 >>'))
+                    if temp in [1,2]:
+                        if temp == 2:
+                            add_on += 500
+                            ice_list = ['Extra', 'Normal', 'Less']
 
-                os.system('cls')
-                table = Table(title="========== Ice ==========", show_header=True, header_style="bold magenta")
-                table.add_column('Selction', width=10, justify='center')
-                table.add_column('Ice amount', width=30, justify='left')
-                table.add_column('Extra Charge', width=10, justify='center')
+                            os.system('cls')
+                            table = Table(title="========== Ice ==========", show_header=True, header_style="bold magenta")
+                            table.add_column('Selction', width=10, justify='center')
+                            table.add_column('Ice amount', width=30, justify='left')
+                            table.add_column('Extra Charge', width=10, justify='center')
 
-                table.add_row('1', 'Extra', '+0원')
-                table.add_row('2', 'Normal', '+0원')
-                table.add_row('3', 'Less', '+0원')
+                            table.add_row('1', 'Extra', '+0원')
+                            table.add_row('2', 'Normal', '+0원')
+                            table.add_row('3', 'Less', '+0원')
 
-                console = Console()
-                console.print(table)
+                            console = Console()
+                            console.print(table)
 
-                ice = int(input('얼음양을 선택해주세요>>'))
+                            while True:
+                                try:
+                                    ice = int(input('얼음양을 선택해주세요>>'))
+                                    if ice in [1,2,3]:
+                                        break
+                                except:
+                                    print('"정수"로 다시 입력해주세요')
+                        break
 
-            qntt = int(input('수량을 입력해 주세요\n>>'))
+                except:
+                    print('Selection에 있는 "정수"로 다시 입력해주세요')
+
+
+            while True:
+                try:
+                    qntt = int(input('수량을 입력해 주세요\n>>'))
+                    break
+                except:
+                    print('"정수"로 다시 입력해주세요')
 
             swt_list = ['120%', '100%', '80%']
 
@@ -430,10 +539,17 @@ class StarBucks_Repository:
             console = Console()
             console.print(table)
 
-            swt = int(input('당도를 선택해주세요>>'))
+            while True:
+                try:
+                    swt = int(input('당도를 선택해주세요>>'))
 
-            if swt == 1:
-                add_on += 300
+                    if swt == 1:
+                        add_on += 300
+
+                    if swt in [1,2,3]:
+                        break
+                except:
+                    print('Selection에 있는 "정수"로 다시 입력해주세요')
 
             size_list = ['Tall', 'Grande', 'Venti']
             os.system('cls')
@@ -449,22 +565,27 @@ class StarBucks_Repository:
             console = Console()
             console.print(table)
 
-            size = int(input('음료 사이즈를 선택해주세요>>'))
+            while True:
+                try:
+                    size = int(input('음료 사이즈를 선택해주세요>>'))
 
-            if size == 2:
-                add_on += 700
-            elif size == 3:
-                add_on += 1000
+                    if size == 2:
+                        add_on += 700
+                    elif size == 3:
+                        add_on += 1000
 
-
-
+                    if size in [1,2,3]:
+                        break
+                except:
+                    print('Selection에 있는 "정수"로 다시 입력해주세요')
 
 
         elif menu_name == 0:
             return
         else:
             print('잘못 선택하셨습니다. 다시 선택해주세요')
-            return self.blended_menu()
+            time.sleep(1)
+            return self.noncoffee_menu()
 
         bags_str = f'{noncoffee_menu_list[menu_name][0]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}'
         print(f'{bags_str}를 선택하셨습니다')
@@ -476,7 +597,7 @@ class StarBucks_Repository:
         order.set_temp(temp_list[temp-1])
         order.set_size(size_list[size - 1])
         order.set_sugar_cnt(swt_list[swt - 1])
-        if temp == '2':
+        if temp == 2:
             order.set_amnt_ice(ice_list[ice - 1])
         order.set_price((noncoffee_menu_list[menu_name][1] + add_on) * qntt)
 

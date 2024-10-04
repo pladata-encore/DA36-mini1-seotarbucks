@@ -1,256 +1,170 @@
-from rich.progress import track
-import time
+from stbk_entity import StarBucks
+from datetime import datetime
+import openpyxl as op
 
-# from abc import ABC, abstractmethod
-# 부모 클래스(공통된 옵션(속성)/메소드) 선언
-class StarBucks:
-    """
-    - 커피 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, 디카페인, [상품명, 샷(연하게, 보통, 진하게(샷추가+500) ), 가격 ]
-    - 음료 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, [상품명, 휘핑 유무, 가격]
-    [변수명 정리]
-    - 카테고리
-        커피 - Coffee
-        음료 - NonCoffee
-    - 옵션
-        상품명 - name
-        온도 - temp
-        사이즈 - size
-        얼음량 - amnt_ice
-        당도 - sugar_cnt
-        컵(텀블러 유무) - cup
-        수량 - quantity
-        디카페인 - decaffein
-        샷 - shot
-        휘핑 - whipping
-    - 기본값(옵션X, 설정값)
-        가격 - price
-    """
-    """
-    스타벅스(starbucks.xlsx)엑셀 가격표(price)시트를 생성후 가격표 시트를 불러오고 싶다...
-    가격표 시트에는 (메뉴 고유 번호, 메뉴명, 가격(**사이즈별 가격**) )
-    불러온 가격표는 읽는 것만 가능.
-    옵션 선택 후 사이즈/텀블러 할인/추가옵션선택 에 따라 결제 금액 계산하고싶다...
-    그걸 장바구니 가격에 넣고 수량/할인유무 에 따른 최종 결제 금액을 계산하고싶다...
-    계산된 최종결제 금액을 스타벅스(starbucks.xlsx)에 매출액 시트를 생성후 집어넣고싶다.
-    매출액 시트에는 (메뉴명, 수량, 매출액,....)
-    ??손님이 할인(적립)쿠폰을 사용해서 결제했다고 해도 매출액엔 변경없음..??
-    -> 변경없다. 매출액 시트에 할인금액? 넣을까....?????
-    """
-    next_id = 1
-
-    def __init__(self,menu_name, temp=None, size=None, amnt_ice=None, sugar_cnt=None, cup=None, quantity=None, price = None):
-        self.__id = StarBucks.next_id
-        self.__menu_name = menu_name
-        self.__temp = temp
-        self.__size = size
-        self.__amnt_ice = amnt_ice
-        self.__sugar_cnt = sugar_cnt
-        self.__cup = cup
-        self.__quantity = quantity
-        self.__price = price
-
-
-        StarBucks.next_id += 1
-
-    def get_id(self):
-        return self.__id
-
-    def get_price(self):
-        return self.__price
-    def set_price(self, price):
-        self.__price = price
-
-    def get_name(self):
-        return self.__menu_name
-    def set_name(self, menu_name):
-        self.__menu_name = menu_name
-
-    def get_temp(self):
-        return self.__temp
-    def set_temp(self, temp):
-       self.__temp = temp
-
-    def get_size(self):
-        return self.__size
-    def set_size(self, size):
-       self.__size = size
-
-    def get_amnt_ice(self):
-        return self.__amnt_ice
-    def set_amnt_ice(self, amnt_ice):
-       self.__amnt_ice = amnt_ice
-
-    def get_sugar_cnt(self):
-        return self.__sugar_cnt
-    def set_sugar_cnt(self, sugar_cnt):
-       self.__sugar_cnt = sugar_cnt
-
-    def get_cup(self):
-        return self.__cup
-    def set_cup(self, cup):
-       self.__cup = cup
-
-    def get_quantity(self):
-        return self.__quantity
-    def set_quantity(self, quantity):
-       self.__quantity = quantity
-
-    def __repr__(self):
-        return f"""
-{self.__id}번, 상품명:{self.__menu_name}, 사이즈:{self.__size}, 얼음량:{self.__amnt_ice}, 당도:{self.__sugar_cnt}, 컵:{self.__cup}, 수량:{self.__quantity}개, 가격:{self.__price}
+"""
+- 커피 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, 디카페인, [상품명, 샷(연하게, 보통, 진하게(샷추가+500) ), 가격 ]
+- 음료 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, [상품명, 휘핑 유무, 가격]
 """
 
-class Shopping_bag:
-    orders = []
+class StarBucks_Repository:
     def __init__(self):
-        pass
+        print('StarBucks_Repository 인스턴스가 생성되었습니다.')
 
-    def add_shopping_bag( order):
-        Shopping_bag.orders.append(order)
-        return Shopping_bag.orders
-
-
-
-
-class Final_page:
-
-    skt = 0.1
-    kt = 0.1
-    lgu = 0.05
-    members = {'2074':2}
-    order_nums = 0
+        self.stbks = [
+            StarBucks('아메리카노','Hot','tall', '보통','보통','매장','3', '5000'),
+            StarBucks('아메리카노','Iced','grande', '보통','보통','take-out','3','5500'),
+            StarBucks('카라멜마끼아또','Hot','grande', '보통','보통','take-out','2','6500'),
+            ]
 
 
-    def __init__(self):
-        pass
-
-    def total_price_cal(self,bags):
-        total_price = 0
-        for item in bags:
-            total_price += item.get_price * item.get_quantity
-        print(total_price)
-        return total_price
-
-
-    ''' 통신사 확인
-    1. skt
-    2. kt
-    3. lgu
-    '''
-
-    def carrier_sel(self):
-        print('사용하고 계신 통신사를 선택해 주세요.')
-        str_carrier_menu = '''
-1. SKT (10% 할인)
-2. KT   (10% 할인)
-3. LGU (5% 할인)
-4. 해당없음.
-'''
-        input_carrier = input(str_carrier_menu)
-        return input_carrier
-
-    def calculation(self, carrier, total_price): # 통신사 없을 시 추가 해야함
-
-        match carrier:
-            case '1':
-                discount_price = total_price * (1-Final_page.skt)
-            case '2':
-                discount_price = total_price * (1-Final_page.kt)
-            case '3':
-                discount_price = total_price * (1-Final_page.lgu)
-            case '4':
-                print('해당되는 할인 항목이 없습니다.')
-                discount_price = total_price
-            case _:
-                print('잘못된 통신사입니다.')
-                return 0
-
-        return discount_price
-
-    def payment(self):      # 1) 결제가능 제한시간, 2) 일정시간(3초) 후 결제완료 메세지 표출
-        method = input('결제 수단을 선택하세요\n1)신용카드 ,2)현금결제, 3)각종 pay\n')
-        flag = 1
-
-        match method:
-            case '1':   # 신용카드
-                print('카드를 칩 리더기에 넣어주세요')
-                for i in track(range(3)):
-                    time.sleep(0.5)
-
-            case '2':   # 현금결제
-                print('카운터에서 결제 해주세요')
-            case '3':   # 삼성, 애플 pay
-                print('핸드폰을 테그에 접촉해주세요')
-                for i in track(range(3)):
-                    time.sleep(0.5)
-            case _:
-                print('잘못된 선택입니다.')
-                flag = 0
-
-        if flag != '0':
-            print('Requesting transaction....')
-            time.sleep(0.5)
-            print('Waiting for response....')
-            time.sleep(0.2)
-            print('Data transmit successful....')
-            time.sleep(0.5)
-            print('Receiving encrypted transaction data....')
-            time.sleep(0.1)
-            print('Transaction was successful....')
-            time.sleep(0.2)
-
-            print('성장적으로 결제 되었습니다.')
-        return flag
-
-
-    def membership(self):
-            member = input('멤버쉽 있으신가요?? 1. yes, 2. no\n>>')
-            flag = 1
-
-            match member:
-                case '1' :
-                    # cell_number = input('핸드폰 번호를 입력해주세요')        # try except 가능
-                    Final_page.add_point(self)
-                case '2':
-                    mem_join = input('멤버쉽에 가입하시겠습니까? [1=y]/2=n \n>>')
-                    if mem_join != '2':
-                        Final_page.join_member(self)
-                    else :
-                        print('결제화면으로 이동합니다.')
-                case _:
-                    print('잘못 누르셨습니다.')
-                    flag = 0
-
-            return flag
-
-    def add_point(self):
-        cell_number = input('핸드폰 번호를 입력해주세요\n>>')
-        try :
-            Final_page.members[cell_number] += 1 # members : 멤버쉽 딕셔너리들, 값들은 숫자여야 함.
-            print(f'1포인트 적립이 완료 되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
-        except:
-            print('등록되지 않은 회원입니다. 회원가입을 진행합니다.')
-            Final_page.join_member(self)
-            # Final_page.members[cell_number] = 1
-            # print(f'1포인트 적립이 완료되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
+#
+#     def coffee_menu(self):
+#         coffee_menu_list = {
+#             1: ('아메리카노', 4500),
+#             2: ('카페라떼', 5000),
+#             3: ('돌체라떼', 5900),
+#             4: ('카페모카', 5500),
+#             5: ('캬라멜마끼아또', 5900)
+#         }
+#         coffee_menu_str = """
+# ---------Coffee Menu--------
+# 1. 아메리카노 ======= 4500원
+# 2. 카페라떼 ========= 5000원
+# 3. 돌체라떼 ========= 5500원
+# 4. 바닐라 라떼 ====== 5500원
+# 5. 카라멜마키아토 ==== 5500원
+# 0. 이전으로 돌아가기
+# ----------------------------
+# 선택:                    """
+#
+#         re_flag = 1
+#
+#         while True:
+#             menu_name = int(input(coffee_menu_str))
+#
+#             add_on = 0
+#
+#             if menu_name in coffee_menu_list:
+#                 print(f'{coffee_menu_list[menu_name][0]}를 선택하셨습니다.')
+#                 temp_list = ['HOT', 'ICED']
+#                 temp = int(input("""
+# ----HOT / ICED----
+# 1. HOT
+# 2. ICED
+# 선택:    """))
+#                 if temp == 2:
+#                     amnt_ice_list = ['적게', '보통', '많이']
+#                     amnt_ice = int(input('''
+# ----얼음량----
+# 1. 적게
+# 2. 보통
+# 3. 많게
+# 선택: '''))
+#                     order = StarBucks(coffee_menu_list[menu_name][0])
+#                     order.set_amnt_ice(amnt_ice_list[amnt_ice -1])
+#                 else:
+#                     pass
+#                 qntt = int(input('수량을 입력해주세요'))
+#                 swt_list = ['120%', '100%', '80%']
+#                 swt = int(input('''
+# ----당도----
+# 1. 더 달게(120%) +300
+# 2. 보통(100%)
+# 3. 덜 달게(80%)
+# 선택: '''))
+#                 if swt == 1:
+#                     add_on += 300
+#                 # order.set_sugar_cnt(swt)
+#                 size_list = ['Tall', 'Grande', 'Venti']
+#                 size = int(input('''
+# ----사이즈----
+# 1. Tall
+# 2. Grande +700
+# 3. Venti +1000
+# 선택: '''))
+#                 if size == 2:
+#                     add_on += 700
+#                 elif size == 3:
+#                     add_on += 1000
+#
+#                 print(
+#                     f'{coffee_menu_list[menu_name][0]} {temp_list[temp - 1]} {qntt}개, 당도는 {swt_list[swt - 1]}, 사이즈는 {size_list[size - 1]}를 선택하셨습니다 ')
+#
+#
+#                 order = StarBucks(coffee_menu_list[menu_name][0])
+#                 order.set_temp(temp)
+#                 order.set_quantity(qntt)
+#                 order.set_size(size_list[size - 1])
+#
+#                 order.set_sugar_cnt(swt)
+#                 order.set_price(coffee_menu_list[menu_name][1]*qntt)
+#                 print(order)
+#             elif menu_name == 0:
+#                 return
+#
+#             else:
+#                 print('잘못 선택하셨습니다. 다시 선택해주세요')
+#
+#
+#             print("장바구니에 추가되었습니다.")
+#             orders = Shopping_bag.add_shopping_bag(order)
+#             print(orders)
+#
+#             re_flag = input('더 주문하시겠습니까? [Y = 1, N = 0] :  ')
+#             if re_flag == '0':
+#                 break
+#
+#         return self.cart_price_sum(orders)
+#
+#
+#
+#
+#     def cart_price_sum(self,orders):
+#         sum_price = 0
+#         for order_price in orders:
+#             sum_price += order_price.get_price()
+#
+#         return sum_price
 
 
-    def join_member(self):
-        cell_number = input('핸드폰 번호를 입력해주세요\n>>')
-        if cell_number in Final_page.members:
-            Final_page.members[cell_number] += 1  # members : 멤버쉽 딕셔너리들, 값들은 숫자여야 함.
-            print('가입된 회원 정보가 있습니다.')
-            print(f'1포인트 적립이 완료 되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
-        else:
-            Final_page.members[cell_number] = 1    # 딕셔너리에 멤버 추가
-            print(f'회원가입이 완료되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
+    def find_all(self):
+            return self.stbks
 
-    def receipt(self):
-        print('주문이 완료 되었습니다. 감사합니다.')
-        Final_page.order_nums += 1
-        print(f'주문번호는 {Final_page.order_nums}번 입니다. ')
+    def push(self, orders):
+        return self.create_workbook(orders)
 
+    def create_workbook(self, orders):
+        wb = op.Workbook()
+        ws = wb.active
+        ws['A1'].value = '주문일시'
+        ws['B1'].value = '번호'
+        ws['C1'].value = '상품명'
+        ws['D1'].value = 'HOT/ICED'
+        ws['E1'].value = '사이즈'
+        ws['F1'].value = '얼음량'
+        ws['G1'].value = '당도'
+        ws['H1'].value = '컵'
+        ws['I1'].value = '수량'
+        ws['J1'].value = '매출액'
 
+        no = 1
+        now = datetime.now()
+        for order in orders:
+            ws[f'A{no + 1}'] = now.strftime('%Y-%m-%d %H:%M:%S')
+            ws[f'B{no + 1}'] = order.get_id()
+            ws[f'C{no + 1}'] = order.get_name()
+            ws[f'D{no + 1}'] = order.get_temp()
+            ws[f'E{no + 1}'] = order.get_size()
+            ws[f'F{no + 1}'] = order.get_amnt_ice()
+            ws[f'G{no + 1}'] = order.get_sugar_cnt()
+            ws[f'H{no + 1}'] = order.get_cup()
+            ws[f'I{no + 1}'] = order.get_quantity()
+            ws[f'J{no + 1}'] = order.get_price()
+            no += 1
+        wb.save('starbucks.xlsx')
+        print('☕☕엑셀파일이 생성되었습니다.☕☕')
+        return wb
 
 
 

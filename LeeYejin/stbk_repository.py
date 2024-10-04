@@ -131,7 +131,7 @@ class StarBucks_Repository:
 
     def find_all(self):
             return self.stbks
-        # TODO 추가했으면 하는것..커피/음료에서 얼음이 안들어가는것(HOT, 프라푸치노,...),휘핑이 원래 안들어가는것들(아메리카노, 자허블, ...)은 옵션이 안보이게 하고 싶다...
+
     def push(self, orders):
         return self.create_workbook(orders)
 

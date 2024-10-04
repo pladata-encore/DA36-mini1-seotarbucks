@@ -9,17 +9,20 @@ class StarBucks_Menu:
 1. Coffee (커피)
 2. Non-Coffee (음료)
 3. Blended (블렌디드)
-4. 장바구니 가기
+4. 결제하기
 0. 주문 종료
 ----------------------
 선택:        """
+        carts = []
         while True:
             choice = input(menu_str)
 
             match choice:
                 # 커피
                 case '1':
-                    self.stbk_service.coffee_menu()
+                    # cart = self.stbk_service.coffee_menu()
+                    # carts.append(cart)
+                    pass
 
                 # 논커피
                 case '2':
@@ -28,10 +31,8 @@ class StarBucks_Menu:
                 # 블렌디드
                 case '3':
                     pass
-
                 case '4':
-                    self.stbk_service.shopping_bag()
-
+                    pass
                 # 관리자 모드 실행
                 case '-1':
                     password = input('>> 관리자 모드를 실행합니다.\n비밀번호를 입력하세요.\n비밀번호 :')
@@ -69,16 +70,19 @@ class StarBucks_Menu:
             match manager_choice:
                 # 매출 정보 조회
                 case '1':
-                    stbks = self.stbk_service.find_all()
-                    self.print_stbks(stbks)
+                    orders = self.stbk_service.find_all()
+                    self.print_stbks(orders)
                     print('😀😀매출정보를 불러왔습니다.😀😀')
                 # 매출 액셀로 내보내기
                 case '2':
-                    stbks = self.stbk_service.find_all()
-                    self.stbk_service.push(stbks)
+                    orders = self.stbk_service.find_all()
+                    self.stbk_service.push(orders)
                 case '0':
                     return
                 case _:
                     print('>> 잘못 선택 하셨습니다.')
+
+
+
 
 

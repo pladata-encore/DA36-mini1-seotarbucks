@@ -8,8 +8,12 @@ class StarBucks_Service:
     def push(self, stbks):
         return self.stbk_repository.push(stbks)
 
-    def coffee_menu(self):
-        return self.stbk_repository.coffee_menu()
+    # def coffee_menu(self):
+    #     return self.stbk_repository.coffee_menu()
+    #
+    # def final_page(self):
+    #     return self.stbk_repository.final_page()
 
-    def shopping_bag(self):
-        return self.stbk_repository.shopping_bag()
+
+
+

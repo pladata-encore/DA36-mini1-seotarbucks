@@ -9,6 +9,7 @@ class StarBucks_Menu:
 1. Coffee (커피)
 2. Non-Coffee (음료)
 3. Blended (블렌디드)
+4. 장바구니 가기
 0. 주문 종료
 ----------------------
 선택:        """
@@ -27,6 +28,9 @@ class StarBucks_Menu:
                 # 블렌디드
                 case '3':
                     pass
+
+                case '4':
+                    self.stbk_service.shopping_bag()
 
                 # 관리자 모드 실행
                 case '-1':
@@ -51,17 +55,6 @@ class StarBucks_Menu:
                 # print(f'{stbk.get_id()}\t{stbk.get_name()}\t{stbk.get_price()}')
         else:
             print('😥😥조회된 결과가 없습니다.😥😥')
-
-
-
-
-
-
-
-
-
-
-
 
     def manager_mode(self):
         manager_mode = """

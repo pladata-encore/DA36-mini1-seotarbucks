@@ -55,8 +55,8 @@ class Shopping_bag:
     def __init__(self):
         pass
 
-    def add_shopping_bag( order):
-        Shopping_bag.orders.append(order)
+    def add_shopping_bag(self):
+        Shopping_bag.orders.append()
         return Shopping_bag.orders
 
 

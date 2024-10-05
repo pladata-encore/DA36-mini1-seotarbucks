@@ -44,19 +44,19 @@ class StarBucks_Menu:
                 # 커피
                 case '1':
                     order = self.stbk_service.coffee_menu()
-                    order.set_cup('Dine-in' if where=="1" else 'To-go')
+                    if order : order.set_cup('Dine-in' if where=="1" else 'To-go')
                     shopping_bag.append(order)
 
                 # 논커피
                 case '2':
                     order = self.stbk_service.noncoffee_menu()
-                    order.set_cup('Dine-in' if where=="1" else 'To-go')
+                    if order : order.set_cup('Dine-in' if where=="1" else 'To-go')
                     shopping_bag.append(order)
 
                 # 블렌디드
                 case '3':
                     order = self.stbk_service.blended_menu()
-                    order.set_cup('Dine-in' if where=="1" else 'To-go')
+                    if order : order.set_cup('Dine-in' if where=="1" else 'To-go')
                     shopping_bag.append(order)
 
                 # 관리자 모드 실행
@@ -103,9 +103,10 @@ class StarBucks_Menu:
 1. 매출 정보 조회
 2. 매출 정보 엑셀내보내기
 3. sort by
+4. Statistics
 0. 종료  
 -------------------------------------
-선택:                      """
+선택: >> """
         while True:
             manager_choice = input(manager_mode)
             match manager_choice:
@@ -123,6 +124,8 @@ class StarBucks_Menu:
                     return
                 case '3':
                     self.stbk_service.sort_by()
+                case '4':
+                    self.stbk_service.stat_call()
 
                 case _:
                     print('>> 잘못 선택 하셨습니다.')

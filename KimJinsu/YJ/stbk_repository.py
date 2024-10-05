@@ -1,5 +1,8 @@
 import time
+from itertools import repeat
+from random import choice
 
+from openpyxl.styles.builtins import percent
 from selenium.webdriver.common.devtools.v128.pwa import change_app_user_settings
 
 from stbk_entity import FinalPage
@@ -32,24 +35,28 @@ def filters(result, by, value):
     table = Table(title="==================== Total Sales List ====================", show_header=True,
                   header_style="bold magenta")
     table.add_column('No', justify='center')
-    table.add_column('Menu', justify='left')
+    table.add_column('Menu', justify='center')
     table.add_column('Quantity', justify='center')
     table.add_column('Sales', justify='center')
     table.add_column('Accum_sales', justify='center')
     table.add_column('Togo', justify='center')
     table.add_column('Member', justify='center')  # 전화번호
     table.add_column('Payment\n1:카드 2:현금 3:기타pay', justify='center')  # '1':신용카드,'2':현금,'3':기타pay '0':NA
-    table.add_column('Carrier\n1:SK 2:KT 3:LGU+ 0:NA', justify='center')  # '1':sk,'2':kt,'3':lgu '0':NA
+    table.add_column('Carrier\n1:SKT 2:KT 3:LGU+ 0:NA', justify='center')  # '1':sk,'2':kt,'3':lgu '0':NA
 
-    Accum_sales=0
+    accum_sales_price=0
+    accum_drinks=0
 
     for n, item in enumerate(result):
         if eval(filter_list[by]) == value:
-            Accum_sales += item.get_price()
+            accum_sales_price += item.get_price()
+            accum_drinks += item.get_quantity()
             table.add_row(f'{n + 1}',
                           f'{item.get_size()} {item.get_temp()} {item.get_name()} / {item.get_amnt_ice()} / {item.get_sugar_cnt()}',
-                          f'{item.get_quantity()}', f'{item.get_price()}', f'{Accum_sales}', f'{item.get_cup()}',
+                          f'{item.get_quantity()}', f'{item.get_price()}', f'{accum_sales_price}', f'{item.get_cup()}',
                           f'{item.get_mbr()}', f'{item.get_pymnt()}', f'{item.get_carrier()}')
+    table.add_section()
+    table.add_row("","Total",f'{accum_drinks}','',f'{accum_sales_price}')
 
     console = Console()
     console.print(table)
@@ -90,11 +97,14 @@ class StarBucks_Repository:
 
         result = StarBucks_Repository.sales_statement
         Accum_sales = 0
+        accum_drinks = 0
         for n, item in enumerate(result):
             Accum_sales += item.get_price()
+            accum_drinks += item.get_quantity()
             table.add_row(f'{n+1}', f'{item.get_size()} {item.get_temp()} {item.get_name()} / {item.get_amnt_ice()} / {item.get_sugar_cnt()}',
                           f'{item.get_quantity()}',f'{item.get_price()}', f'{Accum_sales}',f'{item.get_cup()}',f'{item.get_mbr()}',f'{item.get_pymnt()}',f'{item.get_carrier()}')
-
+        table.add_section()
+        table.add_row('','총 합'.center(50),f'{accum_drinks}','',f'{Accum_sales}')
         console = Console()
         console.print(table)
 
@@ -113,7 +123,7 @@ class StarBucks_Repository:
     def item_sales(self):
         menu_dict={
             '1':'아메리카노',"2":'카페라떼','3':'돌체라떼','4':'카페모카','5':'캬라멜마끼아또',
-            '6':'녹차라테','7':'라이트 자몽 피지오','8':'복숭아 아이스티','9':'딸기 에이드','10':'레몬 에이드',
+            '6':'녹차라테','7':'초코라테','8':'복숭아 아이스티','9':'딸기 에이드','10':'레몬 에이드',
             '11':'녹차 프라푸치노','12':'자바칩 프라푸치노','13':'피치 아사이 리프레셔','14':'딸기 아사이 리프레셔','15':'망고 리프레셔'
         }
 
@@ -149,7 +159,8 @@ class StarBucks_Repository:
                     Accum_quantity += item.get_quantity()
                     Accum_sales += item.get_price()
                     table.add_row(f'{n + 1}', f'{item.get_name()}', f'{Accum_quantity}',f'{Accum_sales}')
-
+            table.add_section()
+            table.add_row('','총 합',f'{Accum_quantity}',f'{Accum_sales}')
             console = Console()
             console.print(table)
         else:
@@ -158,16 +169,128 @@ class StarBucks_Repository:
 
     def sort_by(self):
         result = StarBucks_Repository.sales_statement
-        by=input('Sort by... 1:item, 2:temp, 3: togo >> ')
-        match by:
+        by=input('Sort by... \n1:Item\n2:Hot/Ice\n3:To-go\n4:Payment method\n5:Member\n6:Carrier \n>> ')
+        while True:
+            match by:
+                case '1':
+                    StarBucks_Repository.item_sales(self)
+                    break
+                case '2':
+                    value = input('1: Hot \n2: Iced>>')
+                    filters(result, by, f'{'Hot' if value=="1" else 'Iced'}')
+                    break
+                case '3':
+                    value = input('1: Dine-in \n2: To-go')
+                    filters(result, by, f'{'Dine-in' if value=="1" else 'To-go'}')
+                    break
+                case '4':
+                    value = input('1: 신용카드 \n2: 현금\n3: 기타pay\n>>')
+                    filters(result, by, value)
+                    break
+                case '6':
+                    value = input('1: SKT \n2: KT\n3: LGU+\n4 :N/A\n>>')
+                    filters(result, by, value)
+                    break
+                case '5':
+                    value = input('조회하려는 전화번호를 입력하세요 \n>>')
+                    filters(result, by, value)
+                    break
+                case _:
+                    print('잘못된 선택입니다.')
+
+    def stat_call(self):
+        result = StarBucks_Repository.sales_statement       #type = list
+        os.system('cls')
+        choice=input('원하는 통계를 선택하세요.\n1:음료\n2:사이즈\n3:Hot/Ice\n4:결제수단\n5:통신사\n6:To-go\n>>')
+
+        match choice:
             case '1':
-                StarBucks_Repository.item_sales(self)
+                self.stat(result,'음료')
             case '2':
-                value = input('1: Hot 2: Iced>>')
-                filters(result, by, f'{'Hot' if value=="1" else 'Iced'}')
+                self.stat(result,'사이즈')
             case '3':
-                value = input('1: Dine-in 2: To-go')
-                filters(result, by, f'{'Dine-in' if value=="1" else 'To-go'}')
+                self.stat(result,'Hot/Ice')
+            case '4':
+                self.stat(result,'결제수단')
+            case '5':
+                self.stat(result,'통신사')
+            case '6':
+                self.stat(result,'To-go')
+
+    def stat(self,data,onn):
+
+        match onn:
+            case '음료':
+                str_list = ['아메리카노','카페라떼','돌체라떼','카페모카','캬라멜마끼아또',
+                            '녹차라테','초코라테','밀크티','고구마라테','밤라테',
+                            '녹차 프라푸치노','자바칩 프라푸치노','피치 아사이 리프레셔','딸기 아사이 리프레셔','망고 리프레셔']
+                disp_list = str_list
+                onn_str = f'item.get_name()'
+            case '사이즈':
+                str_list = ['Tall', 'Grande', 'Venti']
+                disp_list=str_list
+                onn_str = f'item.get_size()'
+            case 'Hot/Ice':
+                str_list = ['Hot', 'Iced']
+                disp_list =str_list
+                onn_str = f'item.get_temp()'
+            case '결제수단':
+                str_list = ['1','2','3']
+                disp_list =['카드결제','현금결제','기타Pay']
+                onn_str = f'item.get_pymnt()'
+            case '통신사':
+                str_list = ['1','2','3','0']
+                disp_list =['SKT','KT','LGU+','N/A']
+                onn_str = f'item.get_carrier()'
+            case 'To-go':
+                str_list = ['Dine-in', 'To-go']
+                disp_list = str_list
+                onn_str = f'item.get_cup()'
+            case _:
+                pass
+
+
+        total_cnt=0
+        list=[]
+        cnt_list=[]
+        temp_cnt_list=[]
+
+        for item in data:
+            total_cnt += item.get_quantity()
+            for _ in range(int(item.get_quantity())):
+                # list.append(item.get_name())
+                list.append(eval(onn_str))
+        print(list)
+
+        for value in str_list:
+            cnt_list.append(list.count(value))
+
+        for i in cnt_list:
+            temp_cnt_list.append(round(i*100/sum(cnt_list),0))
+
+        print(temp_cnt_list)
+
+        os.system('cls')
+        table = Table(title="========== Sales Statistic ==========", show_header=True, header_style="bold magenta")
+        table.add_column('Menu', justify='right')
+        table.add_column('Bar',  justify='left')
+        table.add_column('Percent [%]', justify='center')
+
+        for n in range(len(temp_cnt_list)):
+            table.add_row(f'{disp_list[n]}', f'{'#' * int(temp_cnt_list[n])}',f'{temp_cnt_list[n]}')
+
+        table.add_section()
+        table.add_row('','',f'{sum(temp_cnt_list)}')
+        console=Console()
+        console.print(table)
+
+
+
+
+
+
+
+
 
 
     def push(self, stbks):
@@ -569,19 +692,19 @@ class StarBucks_Repository:
 
     def noncoffee_menu(self):
         noncoffee_menu_list = {
-            1: ('녹차 라테', 6500),
-            2: ('라이트 자몽 피지오', 5800),
-            3: ('복숭아 아이스 티', 5900),
-            4: ('딸기에이드', 5500),
-            5: ('레몬에이드', 5500)
+            1: ('녹차라테', 6500),
+            2: ('초코라테', 5800),
+            3: ('밀크티', 5900),
+            4: ('고구마라테', 5500),
+            5: ('밤라테', 5500)
         }
     #     blended_menu_str = """
     # ---------Blended Menu--------
-    # 1. 녹차 라테             =========     6500 원
-    # 2. 라이트 자몽 피지오     =========     5800 원
-    # 3. 복숭아 아이스 티      =========     5900 원
-    # 4. 딸기에이드           =========     5500 원
-    # 5. 레몬에이드           =========     5500 원
+    # 1. 녹차라테             =========     6500 원
+    # 2. 초코라테     =========     5800 원
+    # 3. 밀크티      =========     5900 원
+    # 4. 고구마라테           =========     5500 원
+    # 5. 밤라테           =========     5500 원
     # 0. 이전으로 돌아가기
     # ----------------------------
     # 선택:>>"""
@@ -594,11 +717,11 @@ class StarBucks_Repository:
         table.add_column('Menu', width=30, justify='left')
         table.add_column('Price', width=10, justify='center')
 
-        table.add_row('1', '녹차 라테', '6500원')
-        table.add_row('2', '라이트 자몽 피지오', '5800원')
-        table.add_row('3', '복숭아 아이스 티', '5900원')
-        table.add_row('4', '딸기에이드', '5500원')
-        table.add_row('5', '레몬에이드', '5500원')
+        table.add_row('1', '녹차라테', '6500원')
+        table.add_row('2', '초코라테', '5800원')
+        table.add_row('3', '밀크티', '5900원')
+        table.add_row('4', '고구마라테', '5500원')
+        table.add_row('5', '밤라테', '5500원')
         table.add_row('0', '이전으로 돌아가기', '')
 
         console = Console()

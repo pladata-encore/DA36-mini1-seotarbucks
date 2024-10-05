@@ -178,7 +178,7 @@ class FinalPage:
     def shopping_list(self, shopping_bag, price):
         FinalPage.sales_list.append(shopping_bag)
         size_list = ['Tall', 'Grande', 'Venti']
-        temp_list = ['HOT', 'ICED']
+        temp_list = ['Hot', 'Iced']
         ice_list = ['Extra', 'Normal', 'Less']
         swt_list = ['120%', '100%', '80%']
         sum_quantity=0

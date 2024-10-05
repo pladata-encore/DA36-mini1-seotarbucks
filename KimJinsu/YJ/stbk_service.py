@@ -22,3 +22,6 @@ class StarBucks_Service:
 
     def sort_by(self):
         return self.stbk_repository.sort_by()
+
+    def stat_call(self):
+        return self.stbk_repository.stat_call()

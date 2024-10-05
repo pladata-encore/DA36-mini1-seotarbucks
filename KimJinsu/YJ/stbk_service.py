@@ -16,3 +16,9 @@ class StarBucks_Service:
 
     def noncoffee_menu(self):
         return self.stbk_repository.noncoffee_menu()
+
+    def item_sales(self):
+        return self.stbk_repository.item_sales()
+
+    def sort_by(self):
+        return self.stbk_repository.sort_by()

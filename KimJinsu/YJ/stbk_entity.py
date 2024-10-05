@@ -1,3 +1,4 @@
+import pickle
 from abc import ABC, abstractmethod
 
 
@@ -7,7 +8,8 @@ import time, os
 from rich.console import Console
 from rich.table import Column, Table
 
-
+# from stbk_menu import StarBucks_Menu
+# from stbk_repository import StarBucks_Repository
 
 
 class StarBucks(ABC):
@@ -52,7 +54,8 @@ class StarBucks(ABC):
 
 
 
-    def __init__(self,menu_name, temp=None, size=None, amnt_ice=None, sugar_cnt=None, cup=None, quantity=None, price=None):
+    def __init__(self,menu_name, temp=None, size=None, amnt_ice=None, sugar_cnt=None, cup=None, quantity=None,
+                 price=None, mbr=None, pymnt=None, carrier=None):
         self.__id = StarBucks.next_id
         self.__menu_name = menu_name
         self.__temp = temp
@@ -62,6 +65,10 @@ class StarBucks(ABC):
         self.__cup = cup
         self.__quantity = quantity
         self.__price = price
+        self.__mbr = mbr
+        self.__pymnt = pymnt
+        self.__carrier = carrier
+
         # self.__sv = StarBucks.price * int(quantity)
         StarBucks.next_id += 1
     def get_id(self):
@@ -106,6 +113,21 @@ class StarBucks(ABC):
         return self.__quantity
     def set_quantity(self, quantity):
        self.__quantity = quantity
+
+    def get_mbr(self):
+        return self.__mbr
+    def set_mbr(self, mbr):
+       self.__mbr = mbr
+
+    def get_pymnt(self):
+        return self.__pymnt
+    def set_pymnt(self, pymnt):
+       self.__pymnt = pymnt
+
+    def get_carrier(self):
+        return self.__carrier
+    def set_carrier(self, carrier):
+       self.__carrier = carrier
     # @abstractmethod
     # def calculate_margin(self):
     #     pass
@@ -124,8 +146,27 @@ class StarBucks(ABC):
 
 
 class FinalPage:
+    sales_list=[]
     def __init__(self):
-        pass
+
+        try:
+            with open('membership.pkl', 'rb') as f:
+                FinalPage.members = pickle.load(f)
+            # print('pickle 파일이 로드되었습니다.')
+
+        except:
+            pass
+
+
+
+    def __del__(self):
+        with open('membership.pkl', 'wb') as f:
+            pickle.dump(FinalPage.members, f)
+            # print('pickle 파일이 저장되었습니다.')
+
+
+
+
 
     def cart_price_sum(self,bags):
         sum_price = 0
@@ -135,6 +176,7 @@ class FinalPage:
         return sum_price
 
     def shopping_list(self, shopping_bag, price):
+        FinalPage.sales_list.append(shopping_bag)
         size_list = ['Tall', 'Grande', 'Venti']
         temp_list = ['HOT', 'ICED']
         ice_list = ['Extra', 'Normal', 'Less']
@@ -199,7 +241,7 @@ class FinalPage:
         table = Table(title="========== 통신사 선택 ==========", show_header=True, header_style="bold magenta")
         table.add_column('Selction', width=15, justify='center')
         table.add_column('Carrier', width=50, justify='left')
-        table.add_column('Discount Rate', width=20, justify='center')
+        table.add_column('Discount Rate', width=25, justify='center')
 
         table.add_row('1', 'SKT', '10%')
         table.add_row('2', 'KT', '10%')
@@ -245,15 +287,17 @@ class FinalPage:
 
     def payment(self):      # 1) 결제가능 제한시간, 2) 일정시간(3초) 후 결제완료 메세지 표출
 
-        os.system('cls')
+        # os.system('cls')
         table = Table(title="========== 결제 수단 선택 ==========", show_header=True, header_style="bold magenta")
+        table.add_column(' ', width=30, justify='center')
         table.add_column('Selction', width=10, justify='center')
-        table.add_column('Payment Method', width=30, justify='left')
+        table.add_column('Payment Method', width=35, justify='center')
+        table.add_column(' ', width=30, justify='center')
 
 
-        table.add_row('1', '신용카드')
-        table.add_row('2', '현금결제')
-        table.add_row('3', '각종 pay')
+        table.add_row('','1', '신용카드')
+        table.add_row('','2', '현금결제')
+        table.add_row('','3', '각종 pay')
 
 
         console = Console()
@@ -303,7 +347,7 @@ class FinalPage:
             time.sleep(0.2)
 
             print('성장적으로 결제 되었습니다.')
-        return flag
+        return method
 
     members = {'20745440': 2}
 
@@ -311,12 +355,14 @@ class FinalPage:
 
         os.system('cls')
         table = Table(title="========== Membership ==========", show_header=True, header_style="bold magenta")
+        table.add_column(' ', width=30, justify='center')
         table.add_column('Selction', width=10, justify='center')
-        table.add_column('Membership', width=40, justify='left')
+        table.add_column('Membership', width=35, justify='center')
+        table.add_column(' ', width=30, justify='center')
 
 
-        table.add_row('1', 'Yes')
-        table.add_row('2', 'No')
+        table.add_row("",'1', 'Yes',"")
+        table.add_row('','2', 'No',"")
 
         console = Console()
         console.print(table)
@@ -334,27 +380,30 @@ class FinalPage:
         match member:
             case '1' :
                 # cell_number = input('핸드폰 번호를 입력해주세요')        # try except 가능
-                FinalPage.add_point(999)
+                cell_num=FinalPage.add_point(999)
             case '2':
                 mem_join = input('멤버쉽에 가입하시겠습니까? [1=y]/2=n \n>>')
                 if mem_join != '2':
-                    FinalPage.join_member(999)
+                    cell_num=FinalPage.join_member(999)
                 else :
                     print('결제화면으로 이동합니다.')
+                    cell_num='N/A'
             case _:
                 print('잘못 누르셨습니다.')
                 flag = 0
 
-        return flag
+        return cell_num
 
     def add_point(self):
         cell_number = input('핸드폰 번호를 입력해주세요\n>>')
         try :
             FinalPage.members[cell_number] += 1 # members : 멤버쉽 딕셔너리들, 값들은 숫자여야 함.
             print(f'1포인트 적립이 완료 되었습니다. {cell_number}님의 현재 포인트는 {FinalPage.members[cell_number]} 포인트 입니다.')
+            input('엔터를 눌러주세요')
         except:
             print('등록되지 않은 회원입니다. 회원가입을 진행합니다.')
             FinalPage.join_member(999)
+        return cell_number
             # Final_page.members[cell_number] = 1
             # print(f'1포인트 적립이 완료되었습니다. {cell_number}님의 현재 포인트는 {Final_page.members[cell_number]} 포인트 입니다.')
 
@@ -370,11 +419,15 @@ class FinalPage:
             FinalPage.members[cell_number] = 1    # 딕셔너리에 멤버 추가
             print(f'회원가입이 완료되었습니다. {cell_number}님의 현재 포인트는 {FinalPage.members[cell_number]} 포인트 입니다.')
             input('엔터를 눌러주세요')
+        return cell_number
 
     def receipt(self):
         print('\t주문이 완료 되었습니다.')
         FinalPage.order_nums += 1
         print(f'\n\t주문번호는 {FinalPage.order_nums}번 입니다. ')
+
+
+
 
 
 class Welcome:
@@ -399,7 +452,8 @@ __        __         _                                         _
 ================================================================================
 
 ''')
-        input('계속하려면 엔터를 눌러주세요...')
+        key=input('계속하려면 엔터를 눌러주세요...')
+
 
     def where_menu(self):
 
@@ -409,7 +463,7 @@ __        __         _                                         _
         table.add_column('선   택', width=40, justify='center')
 
         table.add_row('1', 'Dine-in (매장)')
-        table.add_row('2', 'To-Go (포장)')
+        table.add_row('2', 'To-go (포장)')
         table.add_row('0', '직원 호출')
 
 
@@ -425,7 +479,7 @@ __        __         _                                         _
 
     def byebye(self):
         str_bye = '''
-                    (  )   (   )  )
+                (  )   (   )  )
                  ) (   )  (  (
                  ( )  (    ) )
                  _____________

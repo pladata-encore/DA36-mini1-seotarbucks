@@ -11,7 +11,7 @@ class StarBucks_Menu:
     def __init__(self):
         self.stbk_service = StarBucks_Service()
 
-    def main_menu(self):
+    def main_menu(self,where):
 
         shopping_bag=[]
 
@@ -44,16 +44,19 @@ class StarBucks_Menu:
                 # 커피
                 case '1':
                     order = self.stbk_service.coffee_menu()
+                    order.set_cup('Dine-in' if where=="1" else 'To-go')
                     shopping_bag.append(order)
 
                 # 논커피
                 case '2':
                     order = self.stbk_service.noncoffee_menu()
+                    order.set_cup('Dine-in' if where=="1" else 'To-go')
                     shopping_bag.append(order)
 
                 # 블렌디드
                 case '3':
                     order = self.stbk_service.blended_menu()
+                    order.set_cup('Dine-in' if where=="1" else 'To-go')
                     shopping_bag.append(order)
 
                 # 관리자 모드 실행
@@ -64,6 +67,7 @@ class StarBucks_Menu:
                         self.manager_mode()
                     else:
                         print('>> 비밀번호를 틀렸습니다.')
+                    continue
 
                 case '0':
                     return 999
@@ -76,7 +80,6 @@ class StarBucks_Menu:
             if order:
                 re_flag = input('\n더 주문하시겠어요? [yes=1] / no=0\n>>')
                 if re_flag == '0':
-                    # print(shopping_bag)
                     break
 
         return shopping_bag
@@ -94,19 +97,12 @@ class StarBucks_Menu:
 
 
 
-
-
-
-
-
-
-
-
     def manager_mode(self):
         manager_mode = """
 -----------매니저 관리 모드------------
 1. 매출 정보 조회
 2. 매출 정보 엑셀내보내기
+3. sort by
 0. 종료  
 -------------------------------------
 선택:                      """
@@ -116,14 +112,18 @@ class StarBucks_Menu:
                 # 매출 정보 조회
                 case '1':
                     stbks = self.stbk_service.find_all()
-                    self.print_stbks(stbks)
+                    # self.print_stbks(stbks)
                     print('😀😀매출정보를 불러왔습니다.😀😀')
+                    print('계속하시려면 엔터를 눌러주세요>>')
                 # 매출 액셀로 내보내기
                 case '2':
                     stbks = self.stbk_service.find_all()
                     self.stbk_service.push(stbks)
                 case '0':
                     return
+                case '3':
+                    self.stbk_service.sort_by()
+
                 case _:
                     print('>> 잘못 선택 하셨습니다.')
 

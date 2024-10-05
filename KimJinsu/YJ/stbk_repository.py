@@ -1,7 +1,9 @@
 import time
 
-from YJ.stbk_entity import FinalPage
-from project_01 import Final_page
+from selenium.webdriver.common.devtools.v128.pwa import change_app_user_settings
+
+from stbk_entity import FinalPage
+# from project_01 import Final_page
 from stbk_entity import StarBucks
 from rich.console import Console
 from rich.table import Column, Table
@@ -15,19 +17,159 @@ import openpyxl as op
 - 음료 : 온도(Hot/Iced), 사이즈, 얼음량, 당도, 컵(텀블러 유무), 수량, [상품명, 휘핑 유무, 가격]
 """
 
+
+def filters(result, by, value):
+    filter_list = {
+        '1': f'item.get_name()',
+        '2': f'item.get_temp()',
+        '3': f'item.get_cup()',
+        '4': f'item.get_pymnt()',
+        '5': f'item.get_mbr()',
+        '6': f'item.get_carrier()'
+
+    }
+    os.system('cls')
+    table = Table(title="==================== Total Sales List ====================", show_header=True,
+                  header_style="bold magenta")
+    table.add_column('No', justify='center')
+    table.add_column('Menu', justify='left')
+    table.add_column('Quantity', justify='center')
+    table.add_column('Sales', justify='center')
+    table.add_column('Accum_sales', justify='center')
+    table.add_column('Togo', justify='center')
+    table.add_column('Member', justify='center')  # 전화번호
+    table.add_column('Payment\n1:카드 2:현금 3:기타pay', justify='center')  # '1':신용카드,'2':현금,'3':기타pay '0':NA
+    table.add_column('Carrier\n1:SK 2:KT 3:LGU+ 0:NA', justify='center')  # '1':sk,'2':kt,'3':lgu '0':NA
+
+    Accum_sales=0
+
+    for n, item in enumerate(result):
+        if eval(filter_list[by]) == value:
+            Accum_sales += item.get_price()
+            table.add_row(f'{n + 1}',
+                          f'{item.get_size()} {item.get_temp()} {item.get_name()} / {item.get_amnt_ice()} / {item.get_sugar_cnt()}',
+                          f'{item.get_quantity()}', f'{item.get_price()}', f'{Accum_sales}', f'{item.get_cup()}',
+                          f'{item.get_mbr()}', f'{item.get_pymnt()}', f'{item.get_carrier()}')
+
+    console = Console()
+    console.print(table)
+
+
 class StarBucks_Repository:
 
     order_str=[]
+    sales_statement = []
 
     def __init__(self):
-        pass
+        try:
+            with open('sales_statement.pkl', 'rb') as g:
+                StarBucks_Repository.sales_statement = pickle.load(g)
+        except:
+            pass
+
+    def __del__(self):
+        with open('sales_statement.pkl', 'wb') as g:
+            pickle.dump(StarBucks_Repository.sales_statement, g)
 
 
 
 
     def find_all(self):
-            return self.stbks
+
+        table = Table(title="==================== Total Sales List ====================", show_header=True, header_style="bold magenta")
+        table.add_column('No',  justify='center')
+        table.add_column('Menu',  justify='left')
+        table.add_column('Quantity',  justify='center')
+        table.add_column('Sales',  justify='center')
+        table.add_column('Accum_sales',  justify='center')
+        table.add_column('Togo',  justify='center')
+        table.add_column('Member',  justify='center')           # 전화번호
+        table.add_column('Payment\n1:카드 2:현금 3:기타pay',  justify='center')          #'1':신용카드,'2':현금,'3':기타pay '0':NA
+        table.add_column('Carrier\n1:SK 2:KT 3:LGU+ 0:NA',  justify='center')  #'1':sk,'2':kt,'3':lgu '0':NA
+
+
+        result = StarBucks_Repository.sales_statement
+        Accum_sales = 0
+        for n, item in enumerate(result):
+            Accum_sales += item.get_price()
+            table.add_row(f'{n+1}', f'{item.get_size()} {item.get_temp()} {item.get_name()} / {item.get_amnt_ice()} / {item.get_sugar_cnt()}',
+                          f'{item.get_quantity()}',f'{item.get_price()}', f'{Accum_sales}',f'{item.get_cup()}',f'{item.get_mbr()}',f'{item.get_pymnt()}',f'{item.get_carrier()}')
+
+        console = Console()
+        console.print(table)
+
+            # return self.stbks
+
         # TODO 추가했으면 하는것..커피/음료에서 얼음이 안들어가는것(HOT, 프라푸치노,...),휘핑이 원래 안들어가는것들(아메리카노, 자허블, ...)은 옵션이 안보이게 하고 싶다...
+
+        # 1: ('녹차 프라푸치노', 6500),
+        # 2: ('자바칩 프라푸치노', 7000),
+        # 3: ('피치 아사이 리프레셔', 6000),
+        # 4: ('딸기 아사이 리프레셔', 6000),
+        # 5: ('망고 리프레셔', 6000)
+
+
+
+    def item_sales(self):
+        menu_dict={
+            '1':'아메리카노',"2":'카페라떼','3':'돌체라떼','4':'카페모카','5':'캬라멜마끼아또',
+            '6':'녹차라테','7':'라이트 자몽 피지오','8':'복숭아 아이스티','9':'딸기 에이드','10':'레몬 에이드',
+            '11':'녹차 프라푸치노','12':'자바칩 프라푸치노','13':'피치 아사이 리프레셔','14':'딸기 아사이 리프레셔','15':'망고 리프레셔'
+        }
+
+        os.system('cls')
+        table = Table(title=f"== Drink List ==", show_header=True,
+                      header_style="bold magenta")
+        table.add_column('No', justify='center')
+        table.add_column('Menu', justify='center')
+
+        for keys, vals in menu_dict.items():
+            table.add_row(f'{keys}',f'{vals}')
+        console = Console()
+        console.print(table)
+
+        menu = input('메뉴를 선택해주세요>>')
+
+        if menu in menu_dict.keys():
+            os.system('cls')
+            table = Table(title=f"========== {menu_dict[menu]} Sales List ==========", show_header=True,
+                          header_style="bold magenta")
+            table.add_column('No', justify='center')
+            table.add_column('Menu', justify='center')
+            table.add_column('Accum_quantity', justify='center')
+            table.add_column('Accum_sales', justify='center')
+
+            result = StarBucks_Repository.sales_statement
+
+            Accum_sales = 0
+            Accum_quantity = 0
+
+            for n, item in enumerate(result):
+                if item.get_name() == menu_dict[menu]:
+                    Accum_quantity += item.get_quantity()
+                    Accum_sales += item.get_price()
+                    table.add_row(f'{n + 1}', f'{item.get_name()}', f'{Accum_quantity}',f'{Accum_sales}')
+
+            console = Console()
+            console.print(table)
+        else:
+            print('잘못된 접근입니다.')
+
+
+    def sort_by(self):
+        result = StarBucks_Repository.sales_statement
+        by=input('Sort by... 1:item, 2:temp, 3: togo >> ')
+        match by:
+            case '1':
+                StarBucks_Repository.item_sales(self)
+            case '2':
+                value = input('1: Hot 2: Iced>>')
+                filters(result, by, f'{'Hot' if value=="1" else 'Iced'}')
+            case '3':
+                value = input('1: Dine-in 2: To-go')
+                filters(result, by, f'{'Dine-in' if value=="1" else 'To-go'}')
+
+
     def push(self, stbks):
         return self.create_workbook(stbks)
     def create_workbook(self, stbks):
@@ -97,7 +239,7 @@ class StarBucks_Repository:
         if menu_name in coffee_menu_list:
             print(f'{coffee_menu_list[menu_name][0]}를 선택하셨습니다.')
 
-            temp_list = ['HOT', 'ICED']
+            temp_list = ['Hot', 'Iced']
 
             os.system('cls')
             table = Table(title="========== Hot / Cold ==========", show_header=True, header_style="bold magenta")
@@ -245,7 +387,9 @@ class StarBucks_Repository:
             time.sleep(1)
             return self.coffee_menu()
 
+        # StarBucks_Repository.sales_statement.append(order)
 
+        input()
         return order
 
 
@@ -404,6 +548,8 @@ class StarBucks_Repository:
             # order.set_name(coffee_menu_list[menu_name][0])
             order.set_quantity(qntt)
             order.set_size(size_list[size - 1])
+            temp_list = ['Hot', 'Iced']
+            order.set_temp(temp_list[1])
             order.set_amnt_ice(ice_list[ice - 1])
             order.set_sugar_cnt(swt_list[swt - 1])
             order.set_price((blended_menu_list[menu_name][1] + add_on) * qntt)
@@ -413,6 +559,8 @@ class StarBucks_Repository:
             # bags = FinalPage.add_shopping_bag(999,order)
             # print("장바구니에 추가 되었습니다.")
             # print(bags)
+
+            # StarBucks_Repository.sales_statement.append(order)
 
             return order
 
@@ -469,7 +617,7 @@ class StarBucks_Repository:
         if menu_name in noncoffee_menu_list:
             print(f'{noncoffee_menu_list[menu_name][0]}를 선택하셨습니다.')
 
-            temp_list = ['HOT', 'ICED']
+            temp_list = ['Hot', 'Iced']
 
             os.system('cls')
             table = Table(title="========== Hot / Cold ==========", show_header=True, header_style="bold magenta")
@@ -607,5 +755,21 @@ class StarBucks_Repository:
         # print("장바구니에 추가 되었습니다.")
         # print(bags)
 
+        # StarBucks_Repository.sales_statement.append(order)
         return order
+
+
+
+
+# class Stat:
+#     def __init__(self,ave_sales):
+#         self.ave_sales = ave_sales
+#
+#     def cal_sales(self, orders):
+#         for item in orders:
+#
+#
+#
+#
+#
 

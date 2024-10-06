@@ -538,7 +538,7 @@ class StarBucks_Repository:
             re_flag = 1
 
             os.system('cls')
-            table = Table(title="========== Coffee Menu ==========", show_header=True, header_style="bold magenta")
+            table = Table(title="========== Blended Menu ==========", show_header=True, header_style="bold magenta")
             table.add_column('Selction', width=10, justify='center')
             table.add_column('Menu', width=30, justify='left')
             table.add_column('Price', width=10, justify='center')

@@ -518,7 +518,7 @@ class StarBucks_Repository:
 
     def blended_menu(self):
             blended_menu_list = {
-                1: ('녹차 프라투치노', 6500),
+                1: ('녹차 프라푸치노', 6500),
                 2: ('자바칩 프라푸치노', 7000),
                 3: ('피치 아사이 리프레셔', 6000),
                 4: ('딸기 아사이 리프레셔', 6000),

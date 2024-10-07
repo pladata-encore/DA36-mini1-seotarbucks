@@ -16,10 +16,14 @@
 <!-- 이예진 end -->
 
 <!-- 김진수 start -->
+## 4. 코드 구조
+### 4.1 Welcome page.
 
 
 
 
+
+<img src="welcome.png" alt="drawing" width="50%"/>
 
 <!-- 김진수 end -->
 

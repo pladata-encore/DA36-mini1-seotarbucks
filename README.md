@@ -16,8 +16,12 @@
 <!-- 이예진 end -->
 
 <!-- 김진수 start -->
+## 4. 코드 구조
+### 4.1 Welcome page.
 
+<img1 src="img.png", height="10px", width="10px">
 
+<img src="./img.png", height="100x", width="100px">
 
 
 

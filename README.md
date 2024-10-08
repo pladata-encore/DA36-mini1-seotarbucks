@@ -76,7 +76,7 @@
 ## ☕서타벅스 시연영상☕
 #### 팀원들의 유튜브에 올라온 영상과 같은 영상입니다.
 
-[![starbucks_로고.png](starbucks_%EB%A1%9C%EA%B3%A0.png)](https://youtu.be/PY3MDnb6CKo?si=PmUeraXGG7QE6KHl)
+[![스타벅스_로고.jpeg](%EC%8A%A4%ED%83%80%EB%B2%85%EC%8A%A4_%EB%A1%9C%EA%B3%A0.jpeg)](https://youtu.be/PY3MDnb6CKo?si=PmUeraXGG7QE6KHl)
 
 [유영준의 채널에서 보기](https://youtu.be/PY3MDnb6CKo?si=PmUeraXGG7QE6KHl)
 <br>
